@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Salesperson__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>The salesperson whose owned accounts are researched in this digest. Required at the layout level (User lookups cannot be required at field level).</description>
+    <label>Salesperson</label>
+    <referenceTo>User</referenceTo>
+    <relationshipLabel>News Of The Week</relationshipLabel>
+    <relationshipName>NewsOfTheWeek</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

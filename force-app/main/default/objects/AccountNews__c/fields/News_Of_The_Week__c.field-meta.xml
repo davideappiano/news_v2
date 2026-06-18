@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>News_Of_The_Week__c</fullName>
+    <externalId>false</externalId>
+    <label>News Of The Week</label>
+    <referenceTo>NewsOfTheWeek__c</referenceTo>
+    <relationshipLabel>Account News</relationshipLabel>
+    <relationshipName>AccountNews</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

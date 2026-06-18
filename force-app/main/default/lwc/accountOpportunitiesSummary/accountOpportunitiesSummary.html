@@ -1,0 +1,58 @@
+<template>
+    <lightning-card title={title} icon-name="standard:account">
+        <div class="slds-p-around_medium">
+
+            <!-- Account Picklist -->
+            <template lwc:if={accounts}>
+                <lightning-combobox
+                    name="account"
+                    label="Select an Account"
+                    placeholder="-- Select an Account --"
+                    value={selectedAccountId}
+                    options={accountOptions}
+                    onchange={handleAccountChange}
+                    class="slds-m-bottom_medium">
+                </lightning-combobox>
+            </template>
+
+            <template lwc:if={accountsError}>
+                <p class="slds-text-color_error">
+                    Error loading accounts: {accountsError}
+                </p>
+            </template>
+
+            <!-- Opportunity Total Section -->
+            <template lwc:if={selectedAccountId}>
+                <div class="slds-box slds-theme_default slds-m-top_medium">
+                    <template lwc:if={isLoading}>
+                        <lightning-spinner
+                            alternative-text="Loading"
+                            size="small">
+                        </lightning-spinner>
+                    </template>
+
+                    <template lwc:if={opportunityError}>
+                        <p class="slds-text-color_error">
+                            Error loading opportunities: {opportunityError}
+                        </p>
+                    </template>
+
+                    <template lwc:if={showTotal}>
+                        <div class="slds-text-align_center slds-p-around_medium">
+                            <p class="slds-text-heading_small slds-m-bottom_x-small">
+                                Total Opportunity Amount
+                            </p>
+                            <p class="slds-text-heading_large slds-text-color_success total-amount">
+                                {formattedTotal}
+                            </p>
+                            <p class="slds-text-body_small slds-text-color_weak slds-m-top_x-small">
+                                for <strong>{selectedAccountName}</strong>
+                            </p>
+                        </div>
+                    </template>
+                </div>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>
