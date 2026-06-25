@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersionIdentifier>4apsoMdAXAxgt2FOX2cmdo17kMUPYJXli2M4yT7/x48=_3</activeVersionIdentifier>
     <developerName>Weekly_News_Summary_PT</developerName>
     <masterLabel>Weekly News Summary</masterLabel>
     <overridable>false</overridable>
@@ -45,7 +46,7 @@ Rules:
         </inputs>
         <isCitationEnabled>false</isCitationEnabled>
         <primaryModel>sfdc_ai__DefaultGPT5Mini</primaryModel>
-        <status>Draft</status>
+        <status>Published</status>
         <templateDataProviders>
             <definition>apex://WeeklyNewsApexResolver</definition>
             <description>Returns concatenated AccountNews__c.News__c blocks for a given NewsOfTheWeek__c, used by the Weekly News Summary prompt template.</description>
@@ -59,6 +60,127 @@ Rules:
             <referenceName>Apex:WeeklyNewsApexResolver</referenceName>
         </templateDataProviders>
         <versionIdentifier>4apsoMdAXAxgt2FOX2cmdo17kMUPYJXli2M4yT7/x48=_1</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>ou are an executive briefer for a B2B salesperson. Synthesise the per-account research blocks below into ONE concise weekly brief.
+
+Salesperson reference: {!$Input:news.Salesperson__c}
+Run date: {!$Input:news.Run_Date__c}
+
+Per-account research blocks (loaded by the Apex resolver from every AccountNews__c attached to this NewsOfTheWeek record):
+@{!$Apex:WeeklyNewsApexResolver.prompt} 
+an HTML following this structure:
+
+&amp;lt;h2&amp;gt;This Week in the Portfolio&amp;lt;/h2&amp;gt;
+&amp;lt;p&amp;gt;A 2-3 sentence executive summary identifying the dominant signals across the portfolio.&amp;lt;/p&amp;gt;
+
+&amp;lt;h3&amp;gt;Top Opportunities&amp;lt;/h3&amp;gt;
+&amp;lt;ul&amp;gt; … 1-5 bullets, each ending in &amp;lt;em&amp;gt;(Account Name)&amp;lt;/em&amp;gt; …&amp;lt;/ul&amp;gt;
+
+&amp;lt;h3&amp;gt;Risks &amp;amp; Weak Signals&amp;lt;/h3&amp;gt;
+&amp;lt;ul&amp;gt; … 1-5 bullets, each ending in &amp;lt;em&amp;gt;(Account Name)&amp;lt;/em&amp;gt; …&amp;lt;/ul&amp;gt;
+
+&amp;lt;h3&amp;gt;Strategic / Governance Moves&amp;lt;/h3&amp;gt;
+&amp;lt;ul&amp;gt; … 1-5 bullets, each ending in &amp;lt;em&amp;gt;(Account Name)&amp;lt;/em&amp;gt; …&amp;lt;/ul&amp;gt;
+
+&amp;lt;h3&amp;gt;IT / Digital Transformation&amp;lt;/h3&amp;gt;
+&amp;lt;ul&amp;gt; … 1-5 bullets, each ending in &amp;lt;em&amp;gt;(Account Name)&amp;lt;/em&amp;gt; …&amp;lt;/ul&amp;gt;
+
+Rules:
+- Drop any section that has nothing material to report — do not write &amp;quot;none&amp;quot; placeholders.
+- Each bullet is one sentence: state the fact, then the implication for the salesperson.
+- Do NOT invent facts that are not in the per-account blocks.
+- Do NOT include source URLs in the summary (they live on the per-account records).
+- Output HTML only, no code fences.
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <inputs>
+            <apiName>news</apiName>
+            <definition>SOBJECT://NewsOfTheWeek__c</definition>
+            <masterLabel>news</masterLabel>
+            <referenceName>Input:news</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>false</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT55</primaryModel>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>apex://WeeklyNewsApexResolver</definition>
+            <description>Returns concatenated AccountNews__c.News__c blocks for a given NewsOfTheWeek__c, used by the Weekly News Summary prompt template.</description>
+            <label>Aggregate Account News for Week</label>
+            <parameters>
+                <definition>SOBJECT://NewsOfTheWeek__c</definition>
+                <isRequired>true</isRequired>
+                <parameterName>news</parameterName>
+                <valueExpression>{!$Input:news}</valueExpression>
+            </parameters>
+            <referenceName>Apex:WeeklyNewsApexResolver</referenceName>
+        </templateDataProviders>
+        <templateFormat>FormulaExpression</templateFormat>
+        <versionIdentifier>4apsoMdAXAxgt2FOX2cmdo17kMUPYJXli2M4yT7/x48=_2</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are an executive briefer for a B2B salesperson. Synthesise the per-account research blocks below into ONE concise weekly brief.
+
+Salesperson reference: {!$Input:news.Salesperson__c}
+Run date: {!$Input:news.Run_Date__c}
+
+It is important to highlight both leading indicators and strong buying signals to better anticipate opportunities and drive proactive engagement.
+
+Per-account research blocks (loaded by the Apex resolver from every AccountNews__c attached to this NewsOfTheWeek record):
+@{!$Apex:WeeklyNewsApexResolver.prompt} 
+an HTML following this structure:
+
+&amp;lt;h2&amp;gt;This Week in the Portfolio&amp;lt;/h2&amp;gt;
+&amp;lt;p&amp;gt;A 2-3 sentence executive summary identifying the dominant signals across the portfolio.&amp;lt;/p&amp;gt;
+
+&amp;lt;h3&amp;gt;Strong Signals&amp;lt;/h3&amp;gt;
+&amp;lt;ul&amp;gt; … 1-5 bullets, each ending in &amp;lt;em&amp;gt;(Account Name)&amp;lt;/em&amp;gt; …&amp;lt;/ul&amp;gt;
+
+&amp;lt;h3&amp;gt;Risks &amp;amp; Weak Signals&amp;lt;/h3&amp;gt;
+&amp;lt;ul&amp;gt; … 1-5 bullets, each ending in &amp;lt;em&amp;gt;(Account Name)&amp;lt;/em&amp;gt; …&amp;lt;/ul&amp;gt;
+
+&amp;lt;h3&amp;gt;Strategic / Governance Moves&amp;lt;/h3&amp;gt;
+&amp;lt;ul&amp;gt; … 1-5 bullets, each ending in &amp;lt;em&amp;gt;(Account Name)&amp;lt;/em&amp;gt; …&amp;lt;/ul&amp;gt;
+
+&amp;lt;h3&amp;gt;IT / Digital Transformation&amp;lt;/h3&amp;gt;
+&amp;lt;ul&amp;gt; … 1-5 bullets, each ending in &amp;lt;em&amp;gt;(Account Name)&amp;lt;/em&amp;gt; …&amp;lt;/ul&amp;gt;
+
+
+
+
+Rules:
+- Drop any section that has nothing material to report — do not write &amp;quot;none&amp;quot; placeholders.
+- Each bullet is one sentence: state the fact, then the implication for the salesperson.
+- Do NOT invent facts that are not in the per-account blocks.
+- Do NOT include source URLs in the summary (they live on the per-account records).
+- Output HTML only, no code fences.
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <inputs>
+            <apiName>news</apiName>
+            <definition>SOBJECT://NewsOfTheWeek__c</definition>
+            <masterLabel>news</masterLabel>
+            <referenceName>Input:news</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>false</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT55</primaryModel>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>apex://WeeklyNewsApexResolver</definition>
+            <description>Returns concatenated AccountNews__c.News__c blocks for a given NewsOfTheWeek__c, used by the Weekly News Summary prompt template.</description>
+            <label>Aggregate Account News for Week</label>
+            <parameters>
+                <definition>SOBJECT://NewsOfTheWeek__c</definition>
+                <isRequired>true</isRequired>
+                <parameterName>news</parameterName>
+                <valueExpression>{!$Input:news}</valueExpression>
+            </parameters>
+            <referenceName>Apex:WeeklyNewsApexResolver</referenceName>
+        </templateDataProviders>
+        <templateFormat>FormulaExpression</templateFormat>
+        <versionIdentifier>4apsoMdAXAxgt2FOX2cmdo17kMUPYJXli2M4yT7/x48=_3</versionIdentifier>
     </templateVersions>
     <type>einstein_gpt__flex</type>
     <visibility>Global</visibility>

@@ -1,14 +1,18 @@
 /**
- * Per-account research, run as Batchable Apex. Replaces the Queueable
- * fan-out — Queueable was hitting "Maximum stack depth has been reached"
- * inside the ConnectApi.EinsteinLLM callout. Batchable uses a different
- * async container that side-steps that issue, and its finish() lifecycle
- * fires the summary automatically without counter coordination.
+ * Per-account research using chained, paginated Batchable Apex.
  *
- * Batch size = 1: each prompt-template callout runs in its own transaction,
- * isolating failures and giving the platform's web grounding maximum time
- * per account. The platform processes up to 5 concurrent batch executions
- * by default, so with 69 accounts the wall-clock is ~ceil(69/5) × 30s.
+ * Architecture:
+ *   - The controller fans out STREAM_COUNT (=5, the org's concurrent-batch
+ *     ceiling) parallel batch jobs at launch.
+ *   - Each stream owns a fixed slice of account ids assigned round-robin.
+ *   - A stream processes its accounts one PAGE at a time. After each page,
+ *     finish() either chains the next page or — when this stream has run
+ *     out of pages — decrements NewsOfTheWeek__c.Active_Streams__c.
+ *   - Whichever stream brings Active_Streams__c to 0 enqueues the summary.
+ *
+ * This sidesteps the "Maximum stack depth" the Queueable approach hit, gives
+ * 5x the throughput of a single batch job, and scales to portfolios of any
+ * size by chaining pages without rebuilding state in the controller.
  */
 public with sharing class AccountResearchBatch
     implements Database.Batchable<SObject>, Database.AllowsCallouts, Database.Stateful {
@@ -16,28 +20,43 @@ public with sharing class AccountResearchBatch
     @TestVisible
     private static final String TEMPLATE_DEVELOPER_NAME = 'Account_News_Research_PT';
 
-    @TestVisible
-    public static final Integer DEFAULT_BATCH_SIZE = 1;
+    /** Max parallel streams. Salesforce caps concurrent batch jobs at 5. */
+    public static final Integer STREAM_COUNT = 5;
+
+    /** Account ids per chained job. Smaller pages = more chain hops, but lighter per-job state. */
+    public static final Integer DEFAULT_PAGE_SIZE = 25;
+
+    /** Records per execute() transaction within a page. 1 = one callout per transaction (safest isolation). */
+    public static final Integer EXECUTE_BATCH_SIZE = 1;
 
     private final Id newsOfTheWeekId;
+    private final List<Id> streamAccountIds;
+    private final Integer pageIndex;
+    private final Integer pageSize;
 
-    public AccountResearchBatch(Id newsOfTheWeekId) {
+    public AccountResearchBatch(
+        Id newsOfTheWeekId,
+        List<Id> streamAccountIds,
+        Integer pageIndex,
+        Integer pageSize
+    ) {
         this.newsOfTheWeekId = newsOfTheWeekId;
+        this.streamAccountIds = streamAccountIds == null ? new List<Id>() : streamAccountIds;
+        this.pageIndex = pageIndex == null ? 0 : pageIndex;
+        this.pageSize = pageSize == null ? DEFAULT_PAGE_SIZE : pageSize;
     }
 
     public Database.QueryLocator start(Database.BatchableContext bc) {
-        NewsOfTheWeek__c notw = [
-            SELECT Salesperson__c
-            FROM NewsOfTheWeek__c
-            WHERE Id = :newsOfTheWeekId
-            LIMIT 1
-        ];
-        Id salespersonId = notw.Salesperson__c;
+        Integer offset = pageIndex * pageSize;
+        Integer endExclusive = Math.min(offset + pageSize, streamAccountIds.size());
+        List<Id> pageIds = new List<Id>();
+        for (Integer i = offset; i < endExclusive; i++) {
+            pageIds.add(streamAccountIds[i]);
+        }
         return Database.getQueryLocator([
             SELECT Id, Name, Industry, Website, BillingCity, BillingCountry, Description
             FROM Account
-            WHERE OwnerId = :salespersonId
-            ORDER BY Name ASC
+            WHERE Id IN :pageIds
         ]);
     }
 
@@ -46,7 +65,6 @@ public with sharing class AccountResearchBatch
         for (SObject so : scope) {
             Account acct = (Account) so;
             try {
-                // Key matches the prompt template input's referenceName (Input:account).
                 Map<String, Object> inputs = new Map<String, Object>{
                     'Input:account' => acct
                 };
@@ -70,9 +88,38 @@ public with sharing class AccountResearchBatch
     }
 
     public void finish(Database.BatchableContext bc) {
-        // The whole batch finished — fire the summary even if some accounts
-        // failed; the summary template will report on whatever children exist.
-        System.enqueueJob(new WeeklySummaryQueueable(newsOfTheWeekId));
+        Integer nextOffset = (pageIndex + 1) * pageSize;
+        if (nextOffset < streamAccountIds.size()) {
+            // More pages in this stream — chain another batch job for the next page.
+            Database.executeBatch(
+                new AccountResearchBatch(newsOfTheWeekId, streamAccountIds, pageIndex + 1, pageSize),
+                EXECUTE_BATCH_SIZE
+            );
+        } else {
+            // This stream is exhausted. Atomically decrement Active_Streams__c;
+            // whichever stream brings it to 0 fires the summary.
+            decrementStreamsAndMaybeFireSummary();
+        }
+    }
+
+    private void decrementStreamsAndMaybeFireSummary() {
+        try {
+            NewsOfTheWeek__c parent = [
+                SELECT Id, Active_Streams__c
+                FROM NewsOfTheWeek__c
+                WHERE Id = :newsOfTheWeekId
+                FOR UPDATE
+            ];
+            Decimal current = parent.Active_Streams__c == null ? 0 : parent.Active_Streams__c;
+            parent.Active_Streams__c = current - 1;
+            update parent;
+
+            if (parent.Active_Streams__c <= 0) {
+                System.enqueueJob(new WeeklySummaryQueueable(newsOfTheWeekId));
+            }
+        } catch (Exception e) {
+            appendError(null, e);
+        }
     }
 
     private void bumpProcessedCounter(Integer delta) {
@@ -100,7 +147,8 @@ public with sharing class AccountResearchBatch
                 LIMIT 1
             ];
             String prior = parent.Error_Log__c == null ? '' : parent.Error_Log__c + '\n';
-            String entry = '[' + System.now().format() + '] Account ' + accId
+            String accLabel = accId == null ? '<stream>' : String.valueOf(accId);
+            String entry = '[' + System.now().format() + '] Account ' + accLabel
                 + ' - ' + e.getTypeName() + ': ' + e.getMessage();
             parent.Error_Log__c = (prior + entry).left(32768);
             update parent;

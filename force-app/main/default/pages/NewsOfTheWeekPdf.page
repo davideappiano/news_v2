@@ -1,0 +1,49 @@
+<apex:page standardController="NewsOfTheWeek__c"
+           renderAs="pdf"
+           applyHtmlTag="true"
+           applyBodyTag="true"
+           showHeader="false"
+           sidebar="false"
+           standardStylesheets="false"
+           cache="false">
+    <head>
+        <style type="text/css">
+            @page {
+                size: A4;
+                margin: 18mm 16mm 18mm 16mm;
+            }
+            body {
+                font-family: Helvetica, Arial, sans-serif;
+                font-size: 11pt;
+                color: #181818;
+                line-height: 1.45;
+            }
+            h1.docTitle {
+                font-size: 18pt;
+                margin: 0 0 4pt 0;
+            }
+            .docMeta {
+                color: #666;
+                font-size: 9pt;
+                margin-bottom: 16pt;
+                border-bottom: 1px solid #ddd;
+                padding-bottom: 8pt;
+            }
+            .content { word-wrap: break-word; }
+            .content img { max-width: 100%; }
+            .content table { border-collapse: collapse; }
+            .content table td, .content table th { border: 1px solid #ccc; padding: 4pt 6pt; }
+        </style>
+    </head>
+    <body>
+        <h1 class="docTitle">{!NewsOfTheWeek__c.Name}</h1>
+        <div class="docMeta">
+            <apex:outputText value="Run date: {0,date,MMMM d', 'yyyy}">
+                <apex:param value="{!NewsOfTheWeek__c.Run_Date__c}" />
+            </apex:outputText>
+        </div>
+        <div class="content">
+            <apex:outputText value="{!NewsOfTheWeek__c.News_Head__c}" escape="false" />
+        </div>
+    </body>
+</apex:page>

@@ -40,7 +40,7 @@ private class NewsOfTheWeekControllerTest {
         System.assertEquals(3, result.accountCount, 'Should report 3 owned accounts');
 
         NewsOfTheWeek__c after = [
-            SELECT Status__c, Run_Date__c, Total_Accounts__c, Processed_Accounts__c
+            SELECT Status__c, Run_Date__c, Total_Accounts__c, Processed_Accounts__c, Active_Streams__c
             FROM NewsOfTheWeek__c
             WHERE Id = :notw.Id
         ];
@@ -48,6 +48,9 @@ private class NewsOfTheWeekControllerTest {
         System.assertEquals(Date.today(), after.Run_Date__c, 'Run_Date stamped');
         System.assertEquals(3, after.Total_Accounts__c, 'Total_Accounts stamped from query');
         System.assertEquals(0, after.Processed_Accounts__c, 'Processed_Accounts reset to 0');
+        System.assertEquals(3, after.Active_Streams__c,
+            'Active_Streams = min(accounts, STREAM_COUNT) — here 3 accounts with cap 5');
+        System.assertEquals(3, result.streamCount, 'LaunchResult reports stream count');
     }
 
     @isTest

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersionIdentifier>4apsoMdAXAxgt2FOX2cmdo17kMUPYJXli2M4yT7/x48=_10</activeVersionIdentifier>
     <developerName>Account_News_Research_PT</developerName>
     <masterLabel>Account News Research</masterLabel>
     <overridable>false</overridable>
@@ -41,8 +42,1355 @@ Rules:
         </inputs>
         <isCitationEnabled>false</isCitationEnabled>
         <primaryModel>sfdc_ai__DefaultGPT5Mini</primaryModel>
-        <status>Draft</status>
+        <status>Published</status>
         <versionIdentifier>4apsoMdAXAxgt2FOX2cmdo17kMUPYJXli2M4yT7/x48=_1</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are a B2B sales research analyst preparing a weekly briefing for a salesperson.
+
+For the account below, research and return ONLY information that is genuinely relevant from a commercial perspective.
+
+Account: {!$Input:account.Name}
+Industry: {!$Input:account.Industry}
+Website: {!$Input:account.Website}
+Location: {!$Input:account.BillingCity}, {!$Input:account.BillingCountry}
+Description: {!$Input:account.Description}
+
+News: 
+{!$SalesforceDataAction:webSearchStream.webSearchSummary} 
+
+Focus exclusively on findings that fit one of these categories:
+1. Relocations, openings, closures, reorganizations, executive appointments, changes in ownership / shareholders / governance.
+2. Acquisitions, mergers, fundraising rounds, financial results, strategic announcements.
+3. Incidents or weak signals: cyberattacks, outages, litigation, strikes, communication crises, negative publicity.
+4. Projects or announcements about IT, cloud, telecommunications, networking, cybersecurity, digital initiatives, business transformation.
+5. Any development that could create a sales opportunity, represent a risk, or be a meaningful topic for customer engagement.
+
+Rules:
+- Use the Search the Web grounding to find current, verifiable information from the last 90 days when possible.
+- Discard rumours, marketing fluff, and routine product launches that do not affect buying behaviour.
+- For each finding, write one short paragraph (2-3 sentences) explaining the fact and *why it matters commercially*.
+- Group findings under bold category headings; omit any category with no signal.
+- Cite the source URL inline next to every claim.
+- If absolutely nothing relevant is found, return the single sentence: &amp;quot;No commercially relevant news identified this period.&amp;quot;
+- Output as clean HTML (use &amp;lt;h3&amp;gt;, &amp;lt;ul&amp;gt;, &amp;lt;li&amp;gt;, &amp;lt;a&amp;gt; tags). Do not wrap output in code fences.&lt;/content&gt;
+  
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <inputs>
+            <apiName>account</apiName>
+            <definition>SOBJECT://Account</definition>
+            <masterLabel>account</masterLabel>
+            <referenceName>Input:account</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>false</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT5Mini</primaryModel>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>invocable://webSearchStream</definition>
+            <description>Returns a webSearchSummary (a concise text summary of the top search findings) and citationSources (a list of sources used as references).</description>
+            <label>Search The Web</label>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>searchQuery</parameterName>
+                <valueExpression>news for {!$Input:account.Name}</valueExpression>
+            </parameters>
+            <referenceName>SalesforceDataAction:webSearchStream</referenceName>
+        </templateDataProviders>
+        <templateFormat>FormulaExpression</templateFormat>
+        <versionIdentifier>4apsoMdAXAxgt2FOX2cmdo17kMUPYJXli2M4yT7/x48=_2</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are a B2B sales research analyst preparing a monthly briefing for a salesperson.
+
+Account: {!$Input:account.Name}
+
+News: 
+{!$SalesforceDataAction:webSearchStream.webSearchSummary} 
+
+Put an accent of strong and weak signals. 
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <inputs>
+            <apiName>account</apiName>
+            <definition>SOBJECT://Account</definition>
+            <masterLabel>account</masterLabel>
+            <referenceName>Input:account</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>false</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT5Mini</primaryModel>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>invocable://webSearchStream</definition>
+            <description>Returns a webSearchSummary (a concise text summary of the top search findings) and citationSources (a list of sources used as references).</description>
+            <label>Search The Web</label>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>searchQuery</parameterName>
+                <valueExpression>For the account below, research and return ONLY information that is genuinely relevant from a commercial perspective.
+
+Account: {!$Input:account.Name}
+Industry: {!$Input:account.Industry}
+Website: {!$Input:account.Website}
+Location: {!$Input:account.BillingCity}, {!$Input:account.BillingCountry}
+Description: {!$Input:account.Description}
+
+Focus exclusively on findings that fit one of these categories:
+1. Relocations, openings, closures, reorganizations, executive appointments, changes in ownership / shareholders / governance.
+2. Acquisitions, mergers, fundraising rounds, financial results, strategic announcements.
+3. Incidents or weak signals: cyberattacks, outages, litigation, strikes, communication crises, negative publicity.
+4. Projects or announcements about IT, cloud, telecommunications, networking, cybersecurity, digital initiatives, business transformation.
+5. Any development that could create a sales opportunity, represent a risk, or be a meaningful topic for customer engagement.
+
+Rules:
+- Use the Search the Web grounding to find current, verifiable information from the last 90 days when possible.
+- Discard rumours, marketing fluff, and routine product launches that do not affect buying behaviour.
+- For each finding, write one short paragraph (2-3 sentences) explaining the fact and *why it matters commercially*.
+- Group findings under bold category headings; omit any category with no signal.
+- Cite the source URL inline next to every claim.
+- If absolutely nothing relevant is found, return the single sentence: &amp;quot;No commercially relevant news identified this period.&amp;quot;
+- Output as clean HTML (use &amp;lt;h3&amp;gt;, &amp;lt;ul&amp;gt;, &amp;lt;li&amp;gt;, &amp;lt;a&amp;gt; tags). Do not wrap output in code fences.&lt;/content&gt;</valueExpression>
+            </parameters>
+            <referenceName>SalesforceDataAction:webSearchStream</referenceName>
+        </templateDataProviders>
+        <templateFormat>FormulaExpression</templateFormat>
+        <versionIdentifier>4apsoMdAXAxgt2FOX2cmdo17kMUPYJXli2M4yT7/x48=_3</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>Summarize: 
+{!$SalesforceDataAction:webSearchStream.webSearchSummary}
+
+Put an accent of strong and weak signals. 
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <inputs>
+            <apiName>account</apiName>
+            <definition>SOBJECT://Account</definition>
+            <masterLabel>account</masterLabel>
+            <referenceName>Input:account</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>true</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT5Mini</primaryModel>
+        <status>Draft</status>
+        <templateDataProviders>
+            <definition>invocable://webSearchStream</definition>
+            <description>Returns a webSearchSummary (a concise text summary of the top search findings) and citationSources (a list of sources used as references).</description>
+            <label>Search The Web</label>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>searchQuery</parameterName>
+                <valueExpression>Tu es un assistant de veille commerciale pour Bouygues Telecom Business.
+ 
+Ta mission est de produire une newsletter texte concise, claire et facile à lire sur l’actualité des 30 derniers jours concernant tous les comptes de mon portefeuille.
+ 
+Objectif : aider un commercial à repérer rapidement les signaux utiles pour préparer ses relances, détecter des opportunités et anticiper des risques.
+ 
+Pour chaque compte, recherche et synthétise uniquement les informations réellement utiles commercialement, avec un focus sur :
+ 
+déménagements, ouvertures, fermetures, réorganisations, nominations, changements d’actionnaires ou de gouvernance ;
+ 
+acquisitions, fusions, levées de fonds, résultats financiers, annonces stratégiques ;
+ 
+incidents ou signaux faibles : cyberattaque, panne, litige, grève, crise de communication, bad buzz ;
+ 
+projets ou annonces liés au IT, cloud, télécom, réseau, cybersécurité, digital, transformation ;
+ 
+tout élément pouvant créer une opportunité commerciale, un risque ou un sujet de conversation client.
+ 
+Format attendu : newsletter texte, lisible en 1 à 3 minutes maximum.
+ 
+Structure de sortie :
+ 
+Titre de la newsletter
+ 
+Résumé exécutif en 3 à 5 lignes max
+ 
+Comptes à surveiller en priorité
+ 
+Pour chaque compte, affiche :
+ 
+Nom du compte
+ 
+Actualité principale : 1 phrase maximum
+ 
+Pourquoi c’est important : impact commercial en 1 phrase
+ 
+Niveau de priorité : Fort / Moyen / Faible
+ 
+Angle de prise de contact : une idée courte de relance ou d’accroche
+ 
+Autres signaux utiles
+ 
+Liste courte des comptes avec informations secondaires mais exploitables
+ 
+Comptes sans actualité notable
+ 
+Mentionne : “Aucune actualité significative sur les 7 derniers jours.”
+ 
+Top 5 actions commerciales de la semaine
+ 
+Classe les comptes ou actions à traiter en premier
+ 
+Règles de rédaction :
+ 
+Va à l’essentiel.
+ 
+Utilise un style direct, professionnel et concret.
+ 
+Évite le jargon inutile et les phrases longues.
+ 
+Ne cite pas de sources dans le corps du texte, sauf si je le demande.
+ 
+Ne parle que des éléments utiles pour un commercial.
+ 
+Si une information n’est pas vérifiable ou pas suffisamment fiable, ne la mentionne pas.
+ 
+Si aucun signal n’est trouvé sur un compte, indique clairement l’absence d’actualité.
+ 
+Contexte : je suis commercial chez Bouygues Telecom Business. Cette newsletter doit m’aider à préparer mes échanges clients et prioriser mes actions sur les comptes en portefeuille, les sirens 439597410
+547350249
+547250100
+786115162
+857800031
+865800957
+398838359
+440041390
+780975306
+622028777
+438712812
+627220031
+318477098
+504213430
+666450143
+443574926
+214400525
+214401036
+214401515
+214402109
+786116681
+344095260
+662032176
+665780334
+666080031
+345375661
+775610017
+402812440
+427080452
+342238466
+377525720
+522516731
+479739260
+411068737
+418858197
+410173751
+378980668
+408949675
+392373122
+380441881
+339797680
+411133739
+481626158
+444571772
+448928721
+340407816
+393301445
+348714403
+490701414
+451762363
+393227145
+303527410
+412766206
+352769186
+331928242
+431459791
+538485384
+414588905
+513185579
+398334755
+350821724
+342563707
+388775132
+487675142
+422983783
+328266754
+214400137
+440838597
+478811532
+442146866
+334981735
+384253597
+244400644
+435131933
+389433475
+421994658
+323659060
+492220835
+500448659
+414567586
+331377960
+330630872
+492219928
+007180516
+384761664
+410172159
+382161032
+381720804
+130020688
+408959336
+310601687
+393392956
+494527518
+305918187
+394452973
+394499545
+317841880
+510782972
+388255291
+388335580
+562053173
+502282957
+315302265
+424943652
+303527154
+311263412
+402853220
+317805323
+377080460
+313842189
+324320969
+348614165
+443575394
+325480556
+398905745
+328400676
+323180836
+449812098
+326519717
+324569748
+324591437
+448094490
+329545008
+410353437
+340174150
+339688954
+335295770
+450850185
+323480061
+353405947
+382793776
+404324790
+523850824
+529638603
+522297324
+408127553
+420403404
+333362531
+423762004
+423262609
+538656661
+504807942
+335339131
+545550253
+871802815
+419382452
+325655389
+421370289
+378603732
+513827626
+347719171
+424185544
+065200339
+072200355
+326685161
+318308731
+343419263
+343171781
+335339123
+335339149
+338500366
+753514801
+552820557
+549800522
+546950114
+434517116
+484384631
+324378926
+323339309
+330117821
+060200128
+060200607
+063200273
+067200030
+025780230
+523646743
+006380315
+072200280
+306750373
+065201055
+327489647
+434986600
+193509361
+378393417
+352529499
+307312116
+315319491
+327743035
+327744330
+384012340
+384618773
+719803249
+615920238
+393334446
+433116167
+503366536
+504014150
+193509379
+300008059
+301311999
+477950182
+301029922
+379535693
+479023954
+479018608
+410032460
+503052821
+340677871
+519602932
+341383800
+501709943
+384573960
+334162583
+437911183
+502180847
+514988500
+433797784
+722003241
+736250077
+321737124
+390284693
+422499798
+528740368
+322505009
+322566118
+333913630
+782037774
+350782900
+306865601
+625820063
+627020241
+309065910
+339198012
+347796484
+504868514
+348344292
+349198952
+768200610
+907350656
+350321840
+318697687
+514016534
+499710754
+327674354
+955510888
+440523207
+312033210
+411922321
+313414062
+312398019
+345081459
+863800736
+343751947
+442080008
+323096701
+441446325
+438709511
+375580271
+443707773
+443712294
+304891369
+304369069
+514862200
+378360648
+492115977
+508490091
+430330225
+513564450
+449543412
+314989930
+352642490
+447679218
+440555886
+382224418
+448611616
+429768021
+419298963
+534884523
+351295027
+344968433
+857804660
+440033793
+388243339
+479026668
+513019406
+414998906
+528347297
+384529483
+491308532
+451242275
+504871013
+411137136
+515385920
+215600073
+513019372
+451030373
+395057391
+501414841
+402490866
+442718383
+342339637
+347603466
+394422307
+200043123
+443693189
+307737304
+443432539
+264400524
+264401555
+264402595
+264402702
+264900317
+265300087
+265300145
+265300152
+265300368
+265300236
+265300277
+445168081
+445179914
+317507036
+309768422
+380678599
+522297340
+380423988
+380477455
+268502416
+619200728
+301160933
+513937813
+333285674
+479024150
+522598051
+494334824
+504014432
+485253165
+451161806
+477607618
+491835534
+301030227
+302666060
+440271963
+384827531
+388252827
+481022556
+494971575
+483240149
+389493974
+200039022
+790117857
+391291473
+392647517
+350175006
+378233837
+331503656
+380730721
+328037742
+334280898
+245300330
+442632519
+450672753
+502100761
+439142332
+512482928
+183500073
+492821772
+509064283
+349114421
+130003627
+268500303
+418998613
+341233377
+440279339
+524266566
+487513798
+429921257
+453653354
+532254307
+501396378
+418026670
+378441919
+215300542
+215301300
+215301474
+215302019
+214900995
+430410969
+432911154
+450605654
+490911799
+789576378
+522634955
+315267260
+809615644
+428205520
+529340333
+213503600
+265303339
+431338300
+399947647
+401319074
+380515148
+402967301
+006980387
+448310771
+480825470
+810822593
+792898769
+481196442
+452553175
+800544504
+409855137
+420245995
+421002684
+410149454
+787050103
+214400301
+214400434
+480639657
+214401762
+214401689
+214401846
+480535780
+535229363
+479497000
+807541321
+788994671
+388267692
+303752448
+502282940
+486780232
+527941793
+488225269
+501361059
+490719895
+533765376
+790680938
+799995097
+315828947
+534010293
+807394697
+497734780
+509017059
+518907647
+793928078
+523783777
+798836615
+513139188
+528963192
+531679702
+818133522
+815174214
+538554502
+537727679
+753353119
+534245766
+797730124
+813445335
+808012918
+800228546
+802394494
+821556453
+809447675
+501224125
+501233548
+539923649
+531096071
+449080233
+342042363
+794293183
+524012622
+309001840
+309181907
+409033271
+345028237
+504548470
+418447736
+423263599
+339294779
+348593153
+505274480
+413430687
+478537145
+512738931
+532998994
+537464737
+432866382
+200055887
+448322271
+353572423
+351618335
+422709048
+306958570
+793904368
+530129204
+812257830
+795338532
+807649579
+487589897
+824429732
+824040174
+498920743
+803426428
+518769245
+830189577
+812965747
+511233306
+811464940
+503218307
+479849697
+808604821
+500198775
+798114229
+802470161
+803340314
+437795941
+805031986
+539743468
+511321150
+451248785
+515281319
+510572068
+438778698
+522672864
+480331651
+524452364
+437674054
+829076660
+788631026
+435274535
+434154811
+821897873
+814557161
+482576576
+321091118
+353215643
+451356620
+130022874
+480364298
+534101332
+820405744
+842272478
+408154359
+835178641
+821212008
+827468349
+790052831
+200071678
+817789530
+400966974
+521797613
+529026007
+493503585
+399307339
+382894889
+493194708
+829322528
+850056151
+750711491
+520643586
+393075262
+820130193
+852786003
+844589861
+888847746
+750721250
+791416498
+847887494
+534722152
+844856021
+791416514
+832788467
+880065537
+843194150
+450109574
+898484472
+791443013
+791460504
+900011867
+849291703
+800742538
+883719171
+817781198
+899529507
+841696784
+849321591
+832975841
+397568304
+635520463
+840036255
+885270231
+853273134
+847711983
+812288413
+818999625
+908550585
+892298324
+844220426
+503270811
+889077483
+130029747
+844873224
+881395099
+910645597
+890338163
+889809521
+840239404
+913629887
+912944006
+921416897
+891632317
+913941308
+130027949
+130030513
+898152350
+908161003
+904398112
+899683817
+921530739
+901192799
+894467851
+821122751
+951883560
+912737616
+949315212
+981858392
+918171190
+983920695
+850776758
+832311484
+948620752</valueExpression>
+            </parameters>
+            <referenceName>SalesforceDataAction:webSearchStream</referenceName>
+        </templateDataProviders>
+        <templateFormat>FormulaExpression</templateFormat>
+        <versionIdentifier>4apsoMdAXAxgt2FOX2cmdo17kMUPYJXli2M4yT7/x48=_4</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are a B2B sales research analyst preparing a monthly briefing for a salesperson.
+
+Account: {!$Input:account.Name}
+
+News: 
+{!$SalesforceDataAction:webSearchStream.webSearchSummary} 
+
+Put an accent of strong and weak signals. 
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <inputs>
+            <apiName>account</apiName>
+            <definition>SOBJECT://Account</definition>
+            <masterLabel>account</masterLabel>
+            <referenceName>Input:account</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>false</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT5Mini</primaryModel>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>invocable://webSearchStream</definition>
+            <description>Returns a webSearchSummary (a concise text summary of the top search findings) and citationSources (a list of sources used as references).</description>
+            <label>Search The Web</label>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>searchQuery</parameterName>
+                <valueExpression>For the account below, research and return ONLY information that is genuinely relevant from a commercial perspective.
+
+Account: {!$Input:account.Name}
+Industry: {!$Input:account.Industry}
+Website: {!$Input:account.Website}
+Location: {!$Input:account.BillingCity}, {!$Input:account.BillingCountry}
+Description: {!$Input:account.Description}
+SIREN: {!$Input:account.SIREN__c}
+
+Focus exclusively on findings that fit one of these categories:
+1. Relocations, openings, closures, reorganizations, executive appointments, changes in ownership / shareholders / governance.
+2. Acquisitions, mergers, fundraising rounds, financial results, strategic announcements.
+3. Incidents or weak signals: cyberattacks, outages, litigation, strikes, communication crises, negative publicity.
+4. Projects or announcements about IT, cloud, telecommunications, networking, cybersecurity, digital initiatives, business transformation.
+5. Any development that could create a sales opportunity, represent a risk, or be a meaningful topic for customer engagement.
+
+Rules:
+- Use the Search the Web grounding to find current, verifiable information from the last 90 days when possible.
+- Discard rumours, marketing fluff, and routine product launches that do not affect buying behaviour.
+- For each finding, write one short paragraph (2-3 sentences) explaining the fact and *why it matters commercially*.
+- Group findings under bold category headings; omit any category with no signal.
+- Cite the source URL inline next to every claim.
+- If absolutely nothing relevant is found, return the single sentence: &amp;quot;No commercially relevant news identified this period.&amp;quot;
+- Output as clean HTML (use &amp;lt;h3&amp;gt;, &amp;lt;ul&amp;gt;, &amp;lt;li&amp;gt;, &amp;lt;a&amp;gt; tags). Do not wrap output in code fences.</valueExpression>
+            </parameters>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>false</isRequired>
+                <parameterName>searchProvider</parameterName>
+                <valueExpression>openai</valueExpression>
+            </parameters>
+            <referenceName>SalesforceDataAction:webSearchStream</referenceName>
+        </templateDataProviders>
+        <templateFormat>FormulaExpression</templateFormat>
+        <versionIdentifier>4apsoMdAXAxgt2FOX2cmdo17kMUPYJXli2M4yT7/x48=_5</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>Summarize ONLY information that is genuinely relevant from a commercial perspective.
+
+Account: {!$Input:account.Name}
+Industry: {!$Input:account.Industry}
+Website: {!$Input:account.Website}
+Location: {!$Input:account.BillingCity}, {!$Input:account.BillingCountry}
+Description: {!$Input:account.Description}
+
+News: 
+{!$SalesforceDataAction:webSearchStream.webSearchSummary} 
+
+Focus exclusively on findings that fit one of these categories:
+1. Relocations, openings, closures, reorganizations, executive appointments, changes in ownership / shareholders / governance.
+2. Acquisitions, mergers, fundraising rounds, financial results, strategic announcements.
+3. Incidents or weak signals: cyberattacks, outages, litigation, strikes, communication crises, negative publicity.
+4. Projects or announcements about IT, cloud, telecommunications, networking, cybersecurity, digital initiatives, business transformation.
+5. Any development that could create a sales opportunity, represent a risk, or be a meaningful topic for customer engagement.
+
+Rules:
+- Discard rumours, marketing fluff, and routine product launches that do not affect buying behaviour.
+- For each finding, write one short paragraph (2-3 sentences) explaining the fact and *why it matters commercially*.
+- Group findings under bold category headings; omit any category with no signal.
+- Cite the source URL inline next to every claim.
+- If absolutely nothing relevant is found, return the single sentence: &amp;quot;No commercially relevant news identified this period.&amp;quot;
+- Put an accent of strong and weak signals.  (if any)
+
+News: 
+{!$SalesforceDataAction:webSearchStream.webSearchSummary} 
+
+
+
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <inputs>
+            <apiName>account</apiName>
+            <definition>SOBJECT://Account</definition>
+            <masterLabel>account</masterLabel>
+            <referenceName>Input:account</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>true</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT5Mini</primaryModel>
+        <responseFormat>HTML</responseFormat>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>invocable://webSearchStream</definition>
+            <description>Returns a webSearchSummary (a concise text summary of the top search findings) and citationSources (a list of sources used as references).</description>
+            <label>Search The Web</label>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>searchQuery</parameterName>
+                <valueExpression>For the account below, research and return ONLY information that is genuinely relevant from a commercial perspective.
+
+Account: {!$Input:account.Name}
+Industry: {!$Input:account.Industry}
+Website: {!$Input:account.Website}
+Location: {!$Input:account.BillingCity}, {!$Input:account.BillingCountry}
+Description: {!$Input:account.Description}
+SIREN: {!$Input:account.SIREN__c}
+
+Focus exclusively on findings that fit one of these categories:
+1. Relocations, openings, closures, reorganizations, executive appointments, changes in ownership / shareholders / governance.
+2. Acquisitions, mergers, fundraising rounds, financial results, strategic announcements.
+3. Incidents or weak signals: cyberattacks, outages, litigation, strikes, communication crises, negative publicity.
+4. Projects or announcements about IT, cloud, telecommunications, networking, cybersecurity, digital initiatives, business transformation.
+5. Any development that could create a sales opportunity, represent a risk, or be a meaningful topic for customer engagement.
+
+Rules:
+- Use the Search the Web grounding to find current, verifiable information from the last 90 days when possible.
+- Discard rumours, marketing fluff, and routine product launches that do not affect buying behaviour.
+- For each finding, write one short paragraph (2-3 sentences) explaining the fact and *why it matters commercially*.
+- Group findings under bold category headings; omit any category with no signal.
+- Cite the source URL inline next to every claim.
+- If absolutely nothing relevant is found, return the single sentence: &amp;quot;No commercially relevant news identified this period.&amp;quot;
+- Output as clean HTML (use &amp;lt;h3&amp;gt;, &amp;lt;ul&amp;gt;, &amp;lt;li&amp;gt;, &amp;lt;a&amp;gt; tags). Do not wrap output in code fences.</valueExpression>
+            </parameters>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>false</isRequired>
+                <parameterName>searchProvider</parameterName>
+                <valueExpression>openai</valueExpression>
+            </parameters>
+            <referenceName>SalesforceDataAction:webSearchStream</referenceName>
+        </templateDataProviders>
+        <templateFormat>FormulaExpression</templateFormat>
+        <versionIdentifier>4apsoMdAXAxgt2FOX2cmdo17kMUPYJXli2M4yT7/x48=_6</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>Summarize ONLY information that is genuinely relevant from a commercial perspective.
+
+Account: {!$Input:account.Name}
+Industry: {!$Input:account.Industry}
+Website: {!$Input:account.Website}
+Location: {!$Input:account.BillingCity}, {!$Input:account.BillingCountry}
+Description: {!$Input:account.Description}
+
+News: 
+{!$SalesforceDataAction:webSearchStream.webSearchSummary} 
+
+Focus exclusively on findings that fit one of these categories:
+1. Relocations, openings, closures, reorganizations, executive appointments, changes in ownership / shareholders / governance.
+2. Acquisitions, mergers, fundraising rounds, financial results, strategic announcements.
+3. Incidents or weak signals: cyberattacks, outages, litigation, strikes, communication crises, negative publicity.
+4. Projects or announcements about IT, cloud, telecommunications, networking, cybersecurity, digital initiatives, business transformation.
+5. Any development that could create a sales opportunity, represent a risk, or be a meaningful topic for customer engagement.
+
+Rules:
+- Discard rumours, marketing fluff, and routine product launches that do not affecft buying behaviour.
+- For each finding, write one short paragraph (2-3 sentences) explaining the fact and *why it matters commercially*.
+- Group findings under bold category headings; omit any category with no signal.
+- Cite the source URL inline next to every claim.
+- If absolutely nothing relevant is found, return the single sentence: &amp;quot;No commercially relevant news identified this period.&amp;quot;
+- Put an accent of strong and weak signals.  (if any)
+
+News: 
+{!$SalesforceDataAction:webSearchStream.webSearchSummary} 
+
+
+
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <inputs>
+            <apiName>account</apiName>
+            <definition>SOBJECT://Account</definition>
+            <masterLabel>account</masterLabel>
+            <referenceName>Input:account</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>true</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT5Mini</primaryModel>
+        <responseFormat>HTML</responseFormat>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>invocable://webSearchStream</definition>
+            <description>Returns a webSearchSummary (a concise text summary of the top search findings) and citationSources (a list of sources used as references).</description>
+            <label>Search The Web</label>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>searchQuery</parameterName>
+                <valueExpression>For the account below, research and return ONLY information that is genuinely relevant from a commercial perspective.
+
+find current, verifiable information from the last 30 days when possible.
+
+Account: {!$Input:account.Name}
+Industry: {!$Input:account.Industry}
+Website: {!$Input:account.Website}
+Location: {!$Input:account.BillingCity}, {!$Input:account.BillingCountry}
+Description: {!$Input:account.Description}
+SIREN: {!$Input:account.SIREN__c}
+
+Focus exclusively on findings that fit one of these categories:
+1. Relocations, openings, closures, reorganizations, executive appointments, changes in ownership / shareholders / governance.
+2. Acquisitions, mergers, fundraising rounds, financial results, strategic announcements.
+3. Incidents or weak signals: cyberattacks, outages, litigation, strikes, communication crises, negative publicity.
+4. Projects or announcements about IT, cloud, telecommunications, networking, cybersecurity, digital initiatives, business transformation.
+5. Any development that could create a sales opportunity, represent a risk, or be a meaningful topic for customer engagement.
+
+Rules:
+- Discard rumours, marketing fluff, and routine product launches that do not affect buying behaviour.
+- For each finding, write one short paragraph (2-3 sentences) explaining the fact and *why it matters commercially*.
+- Group findings under bold category headings; omit any category with no signal.
+- Cite the source URL inline next to every claim.</valueExpression>
+            </parameters>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>false</isRequired>
+                <parameterName>searchProvider</parameterName>
+                <valueExpression>openai</valueExpression>
+            </parameters>
+            <referenceName>SalesforceDataAction:webSearchStream</referenceName>
+        </templateDataProviders>
+        <templateFormat>FormulaExpression</templateFormat>
+        <versionIdentifier>4apsoMdAXAxgt2FOX2cmdo17kMUPYJXli2M4yT7/x48=_7</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>Summarize ONLY information that is genuinely relevant from a commercial perspective.
+
+Account: {!$Input:account.Name}
+Industry: {!$Input:account.Industry}
+Website: {!$Input:account.Website}
+Location: {!$Input:account.BillingCity}, {!$Input:account.BillingCountry}
+Description: {!$Input:account.Description}
+
+News: 
+{!$SalesforceDataAction:webSearchStream.webSearchSummary} 
+
+Focus exclusively on findings that fit one of these categories:
+1. Relocations, openings, closures, reorganizations, executive appointments, changes in ownership / shareholders / governance.
+2. Acquisitions, mergers, fundraising rounds, financial results, strategic announcements.
+3. Incidents or weak signals: cyberattacks, outages, litigation, strikes, communication crises, negative publicity.
+4. Projects or announcements about IT, cloud, telecommunications, networking, cybersecurity, digital initiatives, business transformation.
+5. Any development that could create a sales opportunity, represent a risk, or be a meaningful topic for customer engagement.
+
+Rules:
+- Discard rumours, marketing fluff, and routine product launches that do not affecft buying behaviour.
+- For each finding, write one short paragraph (2-3 sentences) explaining the fact and *why it matters commercially*.
+- Group findings under bold category headings; omit any category with no signal.
+- Cite the source URL inline next to every claim.
+- If absolutely nothing relevant is found, return the single sentence: &amp;quot;No commercially relevant news identified this period.&amp;quot;
+- Put an accent of strong and weak signals.  (if any)
+
+News: 
+{!$SalesforceDataAction:webSearchStream.webSearchSummary} 
+
+
+
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <inputs>
+            <apiName>account</apiName>
+            <definition>SOBJECT://Account</definition>
+            <masterLabel>account</masterLabel>
+            <referenceName>Input:account</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>true</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultO4Mini</primaryModel>
+        <responseFormat>HTML</responseFormat>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>invocable://webSearchStream</definition>
+            <description>Returns a webSearchSummary (a concise text summary of the top search findings) and citationSources (a list of sources used as references).</description>
+            <label>Search The Web</label>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>searchQuery</parameterName>
+                <valueExpression>For the account below, research and return ONLY information that is genuinely relevant from a commercial perspective.
+
+Find current, verifiable information from the last 30 days only.
+
+Account: {!$Input:account.Name}
+Industry: {!$Input:account.Industry}
+Website: {!$Input:account.Website}
+Location: {!$Input:account.BillingCity}, {!$Input:account.BillingCountry}
+Description: {!$Input:account.Description}
+SIREN: {!$Input:account.SIREN__c}
+
+Focus exclusively on findings that fit one of these categories:
+1. Relocations, openings, closures, reorganizations, executive appointments, changes in ownership / shareholders / governance.
+2. Acquisitions, mergers, fundraising rounds, financial results, strategic announcements.
+3. Incidents or weak signals: cyberattacks, outages, litigation, strikes, communication crises, negative publicity.
+4. Projects or announcements about IT, cloud, telecommunications, networking, cybersecurity, digital initiatives, business transformation.
+5. Any development that could create a sales opportunity, represent a risk, or be a meaningful topic for customer engagement.
+
+Rules:
+- Discard rumours, marketing fluff, and routine product launches that do not affect buying behaviour.
+- For each finding, write one short paragraph (2-3 sentences) explaining the fact and *why it matters commercially*.
+- Group findings under bold category headings; omit any category with no signal.
+- Cite the source URL inline next to every claim.
+.- CITE THE DATE OF THE NEWS</valueExpression>
+            </parameters>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>false</isRequired>
+                <parameterName>searchProvider</parameterName>
+                <valueExpression>openai</valueExpression>
+            </parameters>
+            <referenceName>SalesforceDataAction:webSearchStream</referenceName>
+        </templateDataProviders>
+        <templateFormat>FormulaExpression</templateFormat>
+        <versionIdentifier>4apsoMdAXAxgt2FOX2cmdo17kMUPYJXli2M4yT7/x48=_8</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>Summarize ONLY information that is genuinely relevant from a commercial perspective.
+
+Account: {!$Input:account.Name}
+Industry: {!$Input:account.Industry}
+Website: {!$Input:account.Website}
+Location: {!$Input:account.BillingCity}, {!$Input:account.BillingCountry}
+Description: {!$Input:account.Description}
+
+News: 
+{!$SalesforceDataAction:webSearchStream.webSearchSummary} 
+
+Focus exclusively on findings that fit one of these categories:
+1. Relocations, openings, closures, reorganizations, executive appointments, changes in ownership / shareholders / governance.
+2. Acquisitions, mergers, fundraising rounds, financial results, strategic announcements.
+3. Incidents or weak signals: cyberattacks, outages, litigation, strikes, communication crises, negative publicity.
+4. Projects or announcements about IT, cloud, telecommunications, networking, cybersecurity, digital initiatives, business transformation.
+5. Any development that could create a sales opportunity, represent a risk, or be a meaningful topic for customer engagement.
+
+Rules:
+- Discard rumours, marketing fluff, and routine product launches that do not affecft buying behaviour.
+- For each finding, write one short paragraph (2-3 sentences) explaining the fact and *why it matters commercially*.
+- Group findings under bold category headings; omit any category with no signal.
+- Cite the source URL inline next to every claim.
+- If absolutely nothing relevant is found, return the single sentence: &amp;quot;No commercially relevant news identified this period.&amp;quot;
+- Put an accent of strong and weak signals.  (if any)
+
+News: 
+{!$SalesforceDataAction:webSearchStream.webSearchSummary} 
+
+
+
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <inputs>
+            <apiName>account</apiName>
+            <definition>SOBJECT://Account</definition>
+            <masterLabel>account</masterLabel>
+            <referenceName>Input:account</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>true</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultO4Mini</primaryModel>
+        <responseFormat>HTML</responseFormat>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>invocable://webSearchStream</definition>
+            <description>Returns a webSearchSummary (a concise text summary of the top search findings) and citationSources (a list of sources used as references).</description>
+            <label>Search The Web</label>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>searchQuery</parameterName>
+                <valueExpression>For the account below, research and return ONLY information that is genuinely relevant from a commercial perspective.
+
+Find current, verifiable information from the last 30 days only on the below account:
+
+Account: {!$Input:account.Name}
+Industry: {!$Input:account.Industry}
+Website: {!$Input:account.Website}
+Location: {!$Input:account.BillingCity}, {!$Input:account.BillingCountry}
+Description: {!$Input:account.Description}
+SIREN: {!$Input:account.SIREN__c}
+
+Focus exclusively on findings that fit one of these categories:
+1. Relocations, openings, closures, reorganizations, executive appointments, changes in ownership / shareholders / governance.
+2. Acquisitions, mergers, fundraising rounds, financial results, strategic announcements.
+3. Incidents or weak signals: cyberattacks, outages, litigation, strikes, communication crises, negative publicity.
+4. Projects or announcements about IT, cloud, telecommunications, networking, cybersecurity, digital initiatives, business transformation.
+5. Any development that could create a sales opportunity, represent a risk, or be a meaningful topic for customer engagement.
+
+Rules:
+- Discard rumours, marketing fluff, and routine product launches that do not affect buying behaviour.
+- Cite the source URL inline next to every claim.
+.- CITE THE DATE OF THE NEWS</valueExpression>
+            </parameters>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>false</isRequired>
+                <parameterName>searchProvider</parameterName>
+                <valueExpression>openai</valueExpression>
+            </parameters>
+            <referenceName>SalesforceDataAction:webSearchStream</referenceName>
+        </templateDataProviders>
+        <templateFormat>FormulaExpression</templateFormat>
+        <versionIdentifier>4apsoMdAXAxgt2FOX2cmdo17kMUPYJXli2M4yT7/x48=_9</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>Summarize ONLY information that is genuinely relevant from a commercial perspective.
+
+Account: {!$Input:account.Name}
+Industry: {!$Input:account.Industry}
+Website: {!$Input:account.Website}
+Location: {!$Input:account.BillingCity}, {!$Input:account.BillingCountry}
+Description: {!$Input:account.Description}
+
+Focus exclusively on findings that fit one of these categories:
+1. Relocations, openings, closures, reorganizations, executive appointments, changes in ownership / shareholders / governance.
+2. Acquisitions, mergers, fundraising rounds, financial results, strategic announcements.
+3. Incidents or weak signals: cyberattacks, outages, litigation, strikes, communication crises, negative publicity.
+4. Projects or announcements about IT, cloud, telecommunications, networking, cybersecurity, digital initiatives, business transformation.
+5. Any development that could create a sales opportunity, represent a risk, or be a meaningful topic for customer engagement.
+
+Rules:
+- Discard rumours, marketing fluff, and routine product launches that do not affecft buying behaviour.
+- For each finding, write one short paragraph (2-3 sentences) explaining the fact and *why it matters commercially*.
+- Group findings under bold category headings; omit any category with no signal.
+- Cite the source URL inline next to every claim.
+- If absolutely nothing relevant is found, return the single sentence: &amp;quot;No commercially relevant news identified this period.&amp;quot;
+- Put an accent of strong and weak signals.  (if any)
+
+News: 
+{!$SalesforceDataAction:webSearchStream.webSearchSummary} 
+
+
+
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <inputs>
+            <apiName>account</apiName>
+            <definition>SOBJECT://Account</definition>
+            <masterLabel>account</masterLabel>
+            <referenceName>Input:account</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>true</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultO4Mini</primaryModel>
+        <responseFormat>HTML</responseFormat>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>invocable://webSearchStream</definition>
+            <description>Returns a webSearchSummary (a concise text summary of the top search findings) and citationSources (a list of sources used as references).</description>
+            <label>Search The Web</label>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>searchQuery</parameterName>
+                <valueExpression>For the account below, research and return ONLY information that is genuinely relevant from a commercial perspective.
+
+Find current, verifiable information from the last 30 days only on the below account:
+
+Account: {!$Input:account.Name}
+Industry: {!$Input:account.Industry}
+Website: {!$Input:account.Website}
+Location: {!$Input:account.BillingCity}, {!$Input:account.BillingCountry}
+Description: {!$Input:account.Description}
+SIREN: {!$Input:account.SIREN__c}
+
+Focus exclusively on findings that fit one of these categories:
+1. Relocations, openings, closures, reorganizations, executive appointments, changes in ownership / shareholders / governance.
+2. Acquisitions, mergers, fundraising rounds, financial results, strategic announcements.
+3. Incidents or weak signals: cyberattacks, outages, litigation, strikes, communication crises, negative publicity.
+4. Projects or announcements about IT, cloud, telecommunications, networking, cybersecurity, digital initiatives, business transformation.
+5. Any development that could create a sales opportunity, represent a risk, or be a meaningful topic for customer engagement.
+
+Rules:
+- Discard rumours, marketing fluff, and routine product launches that do not affect buying behaviour.
+- Cite the source URL inline next to every claim.
+.- CITE THE DATE OF THE NEWS</valueExpression>
+            </parameters>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>false</isRequired>
+                <parameterName>searchProvider</parameterName>
+                <valueExpression>openai</valueExpression>
+            </parameters>
+            <referenceName>SalesforceDataAction:webSearchStream</referenceName>
+        </templateDataProviders>
+        <templateFormat>FormulaExpression</templateFormat>
+        <versionIdentifier>4apsoMdAXAxgt2FOX2cmdo17kMUPYJXli2M4yT7/x48=_10</versionIdentifier>
     </templateVersions>
     <type>einstein_gpt__flex</type>
     <visibility>Global</visibility>

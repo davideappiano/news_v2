@@ -2,28 +2,28 @@ import { LightningElement, api } from 'lwc';
 import { CloseActionScreenEvent } from 'lightning/actions';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { getRecordNotifyChange } from 'lightning/uiRecordApi';
-import launch from '@salesforce/apex/NewsOfTheWeekController.launch';
+import generatePdf from '@salesforce/apex/NewsOfTheWeekController.generatePdf';
 
-export default class LaunchNewsOfTheWeek extends LightningElement {
+export default class GenerateNewsOfTheWeekPdf extends LightningElement {
     @api recordId;
 
     @api async invoke() {
         try {
-            const result = await launch({ recordId: this.recordId });
+            const result = await generatePdf({ recordId: this.recordId });
             this.dispatchEvent(
                 new ShowToastEvent({
-                    title: 'News research started',
-                    message: `Researching ${result.accountCount} account(s) across ${result.streamCount} parallel stream(s). The page will refresh when complete.`,
+                    title: 'PDF generated',
+                    message: `${result.fileName} has been attached to this record.`,
                     variant: 'success'
                 })
             );
             getRecordNotifyChange([{ recordId: this.recordId }]);
         } catch (error) {
             const message =
-                error?.body?.message || error?.message || 'Unknown error launching the run.';
+                error?.body?.message || error?.message || 'Unknown error generating the PDF.';
             this.dispatchEvent(
                 new ShowToastEvent({
-                    title: 'Could not start research',
+                    title: 'Could not generate PDF',
                     message,
                     variant: 'error',
                     mode: 'sticky'
