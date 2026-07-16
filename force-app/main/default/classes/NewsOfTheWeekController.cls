@@ -63,7 +63,6 @@ public with sharing class NewsOfTheWeekController {
         notw.Run_Date__c = Date.today();
         notw.Error_Log__c = null;
         notw.News_Head__c = null;
-        notw.Partial_Summaries__c = null;
         notw.Total_Accounts__c = accounts.size();
         notw.Processed_Accounts__c = 0;
         notw.Active_Streams__c = streamCount;
@@ -128,10 +127,45 @@ public with sharing class NewsOfTheWeekController {
         notw.Total_Accounts__c = null;
         notw.Processed_Accounts__c = null;
         notw.Active_Streams__c = null;
-        notw.Partial_Summaries__c = null;
         update notw;
 
         return deleted;
+    }
+
+    /**
+     * Re-run ONLY the summary step over the AccountNews__c children that already
+     * exist — does not re-research the accounts. Useful after tweaking the
+     * Weekly_News_Summary_PT template or clearing a bad summary.
+     */
+    @AuraEnabled
+    public static void rerunSummary(Id recordId) {
+        if (recordId == null) {
+            throw new AuraHandledException('A NewsOfTheWeek record id is required.');
+        }
+
+        NewsOfTheWeek__c notw = [
+            SELECT Id, Status__c
+            FROM NewsOfTheWeek__c
+            WHERE Id = :recordId
+            LIMIT 1
+        ];
+
+        if (notw.Status__c == 'Processing') {
+            throw new AuraHandledException('A run is already in progress for this record.');
+        }
+
+        Integer childCount = [
+            SELECT COUNT() FROM AccountNews__c WHERE News_Of_The_Week__c = :recordId
+        ];
+        if (childCount == 0) {
+            throw new AuraHandledException('There are no Account News records to summarize. Run Launch first.');
+        }
+
+        notw.Status__c = 'Processing';
+        notw.News_Head__c = null;
+        update notw;
+
+        System.enqueueJob(new WeeklySummaryQueueable(notw.Id));
     }
 
     public class PdfResult {
