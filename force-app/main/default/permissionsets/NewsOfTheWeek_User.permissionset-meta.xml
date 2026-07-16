@@ -74,6 +74,11 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
+        <field>NewsOfTheWeek__c.Partial_Summaries__c</field>
+        <editable>true</editable>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
         <field>AccountNews__c.News__c</field>
         <editable>true</editable>
         <readable>true</readable>

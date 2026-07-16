@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersionIdentifier>1</activeVersionIdentifier>
+    <developerName>Weekly_News_Chunk_PT</developerName>
+    <masterLabel>Weekly News Chunk Summary</masterLabel>
+    <overridable>false</overridable>
+    <templateVersions>
+        <content>You are condensing one batch of per-account sales research into a compact partial summary. This partial will later be merged with other partials into a final weekly brief, so be information-dense and DO NOT add any preamble, greeting, or closing.
+
+Per-account research blocks for this batch:
+{!$Input:chunk}
+
+Produce a compact plain-text digest:
+- One short bullet per account that has a MATERIAL signal (acquisition, funding, exec change, incident, IT/digital initiative, opportunity, risk).
+- Each bullet: the fact, then why it matters, then the account name in parentheses.
+- Skip accounts with nothing material — do not list them.
+- No headings, no HTML, no source URLs. Just the bullets.
+- If nothing in this batch is material, output exactly: NO_MATERIAL_SIGNALS</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <inputs>
+            <apiName>chunk</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>chunk</masterLabel>
+            <referenceName>Input:chunk</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>false</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT5Mini</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>1</versionIdentifier>
+    </templateVersions>
+    <type>einstein_gpt__flex</type>
+    <visibility>Global</visibility>
+</GenAiPromptTemplate>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Partial_Summaries__c</fullName>
+    <description>Map-reduce scratch space: each chunk's partial summary is appended here during the MAP phase. The REDUCE phase summarizes these partials into News_Head__c. Cleared on reset and at the start of each run.</description>
+    <externalId>false</externalId>
+    <label>Partial Summaries</label>
+    <length>131072</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>10</visibleLines>
+</CustomField>
