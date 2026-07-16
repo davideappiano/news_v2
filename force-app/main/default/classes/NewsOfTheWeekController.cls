@@ -255,6 +255,87 @@ public with sharing class NewsOfTheWeekController {
         return new PdfResult(contentDocumentId, fileName + '.pdf');
     }
 
+    /**
+     * Email the most recent PDF attached to this record to the assigned
+     * salesperson's email address. Requires that a PDF was already generated
+     * (via the Generate PDF action). Returns the recipient email for the toast.
+     */
+    @AuraEnabled
+    public static String sendToRep(Id recordId) {
+        if (recordId == null) {
+            throw new AuraHandledException('A NewsOfTheWeek record id is required.');
+        }
+
+        NewsOfTheWeek__c notw = [
+            SELECT Id, Name, News_Head__c, Salesperson__c, Salesperson__r.Email, Salesperson__r.Name
+            FROM NewsOfTheWeek__c
+            WHERE Id = :recordId
+            LIMIT 1
+        ];
+
+        if (notw.Salesperson__c == null || String.isBlank(notw.Salesperson__r.Email)) {
+            throw new AuraHandledException('The salesperson has no email address on file.');
+        }
+
+        // ContentDocumentLink can't be used in a semi-join subquery, so resolve
+        // the linked document ids first, then query the PDF versions.
+        Set<Id> docIds = new Set<Id>();
+        for (ContentDocumentLink cdl : [
+            SELECT ContentDocumentId
+            FROM ContentDocumentLink
+            WHERE LinkedEntityId = :recordId
+        ]) {
+            docIds.add(cdl.ContentDocumentId);
+        }
+
+        if (docIds.isEmpty()) {
+            throw new AuraHandledException('No PDF is attached to this record. Generate the PDF first.');
+        }
+
+        List<ContentVersion> pdfs = [
+            SELECT Id, Title, PathOnClient, VersionData
+            FROM ContentVersion
+            WHERE FileType = 'PDF'
+              AND IsLatest = true
+              AND ContentDocumentId IN :docIds
+            ORDER BY CreatedDate DESC
+            LIMIT 1
+        ];
+
+        if (pdfs.isEmpty()) {
+            throw new AuraHandledException('No PDF is attached to this record. Generate the PDF first.');
+        }
+        ContentVersion pdf = pdfs[0];
+        String fileName = String.isBlank(pdf.PathOnClient) ? pdf.Title + '.pdf' : pdf.PathOnClient;
+
+        Messaging.EmailFileAttachment attachment = new Messaging.EmailFileAttachment();
+        attachment.setFileName(fileName);
+        attachment.setBody(pdf.VersionData);
+        attachment.setContentType('application/pdf');
+
+        String body = '<p>Hello ' + (notw.Salesperson__r.Name == null ? '' : notw.Salesperson__r.Name) + ',</p>'
+            + '<p>Please find attached your News Of The Week digest (' + notw.Name + ').</p>'
+            + (String.isBlank(notw.News_Head__c) ? '' : '<hr/>' + notw.News_Head__c);
+
+        Messaging.SingleEmailMessage msg = new Messaging.SingleEmailMessage();
+        msg.setToAddresses(new List<String>{ notw.Salesperson__r.Email });
+        msg.setSubject('News Of The Week - ' + notw.Name);
+        msg.setHtmlBody(body);
+        msg.setFileAttachments(new List<Messaging.EmailFileAttachment>{ attachment });
+        msg.setSaveAsActivity(false);
+
+        List<Messaging.SendEmailResult> results =
+            Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{ msg });
+
+        if (!results.isEmpty() && !results[0].isSuccess()) {
+            throw new AuraHandledException(
+                'Email send failed: ' + results[0].getErrors()[0].getMessage()
+            );
+        }
+
+        return notw.Salesperson__r.Email;
+    }
+
     private static String buildPdfFileName(NewsOfTheWeek__c notw) {
         String base = String.isBlank(notw.Name) ? 'News Of The Week' : notw.Name;
         String stamp = Datetime.now().format('yyyy-MM-dd_HHmm');

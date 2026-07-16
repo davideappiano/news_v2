@@ -123,14 +123,19 @@
             <sortOrder>3</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
+            <actionName>NewsOfTheWeek__c.Send_To_Rep</actionName>
+            <actionType>QuickAction</actionType>
+            <sortOrder>4</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
             <actionName>Edit</actionName>
             <actionType>StandardButton</actionType>
-            <sortOrder>4</sortOrder>
+            <sortOrder>5</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
             <actionName>Delete</actionName>
             <actionType>StandardButton</actionType>
-            <sortOrder>5</sortOrder>
+            <sortOrder>6</sortOrder>
         </platformActionListItems>
     </platformActionList>
     <relatedLists>
