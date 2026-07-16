@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Frequency_Days__c</fullName>
+    <description>Interval in days between automatic runs (e.g. 7 = weekly, 14 = every two weeks, 30 = monthly). Defaults to 7 if blank.</description>
+    <externalId>false</externalId>
+    <label>Frequency (Days)</label>
+    <precision>4</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

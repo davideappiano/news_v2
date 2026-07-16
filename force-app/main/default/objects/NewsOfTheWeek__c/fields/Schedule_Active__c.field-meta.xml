@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Schedule_Active__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>When checked, the NewsOfTheWeekScheduler will launch this digest automatically on Next Run Date and reschedule by Frequency (Days).</description>
+    <externalId>false</externalId>
+    <label>Schedule Active</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

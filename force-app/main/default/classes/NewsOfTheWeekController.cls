@@ -11,10 +11,27 @@ public with sharing class NewsOfTheWeekController {
         }
     }
 
+    public class NewsRunException extends Exception {}
+
+    /**
+     * LWC entry point — wraps runNow and surfaces failures as AuraHandledException.
+     */
     @AuraEnabled
     public static LaunchResult launch(Id recordId) {
+        try {
+            return runNow(recordId);
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    /**
+     * Core launch routine, reusable from both the LWC and the scheduler.
+     * Throws NewsRunException on validation failure (callers decide how to surface it).
+     */
+    public static LaunchResult runNow(Id recordId) {
         if (recordId == null) {
-            throw new AuraHandledException('A NewsOfTheWeek record id is required.');
+            throw new NewsRunException('A NewsOfTheWeek record id is required.');
         }
 
         NewsOfTheWeek__c notw = [
@@ -25,11 +42,11 @@ public with sharing class NewsOfTheWeekController {
         ];
 
         if (notw.Salesperson__c == null) {
-            throw new AuraHandledException('Salesperson must be set before launching.');
+            throw new NewsRunException('Salesperson must be set before launching.');
         }
 
         if (notw.Status__c == 'Processing') {
-            throw new AuraHandledException('A run is already in progress for this record.');
+            throw new NewsRunException('A run is already in progress for this record.');
         }
 
         List<Account> accounts = [
@@ -42,7 +59,7 @@ public with sharing class NewsOfTheWeekController {
         ];
 
         if (accounts.isEmpty()) {
-            throw new AuraHandledException('The selected Salesperson does not own any accounts.');
+            throw new NewsRunException('The selected Salesperson does not own any accounts.');
         }
 
         // Round-robin distribute account ids across STREAM_COUNT parallel streams.
