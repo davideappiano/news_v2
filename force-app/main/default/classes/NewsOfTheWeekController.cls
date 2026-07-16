@@ -35,7 +35,9 @@ public with sharing class NewsOfTheWeekController {
         List<Account> accounts = [
             SELECT Id
             FROM Account
-            WHERE OwnerId = :notw.Salesperson__c
+            WHERE OwnerId = :notw.Salesperson__c 
+                AND RecordType.Name = 'EJ'
+                AND Statut__c IN ('Résilié', 'Actif', 'Prospect', 'Client')
             ORDER BY Id ASC
         ];
 
@@ -61,6 +63,7 @@ public with sharing class NewsOfTheWeekController {
         notw.Run_Date__c = Date.today();
         notw.Error_Log__c = null;
         notw.News_Head__c = null;
+        notw.Partial_Summaries__c = null;
         notw.Total_Accounts__c = accounts.size();
         notw.Processed_Accounts__c = 0;
         notw.Active_Streams__c = streamCount;
@@ -125,6 +128,7 @@ public with sharing class NewsOfTheWeekController {
         notw.Total_Accounts__c = null;
         notw.Processed_Accounts__c = null;
         notw.Active_Streams__c = null;
+        notw.Partial_Summaries__c = null;
         update notw;
 
         return deleted;
