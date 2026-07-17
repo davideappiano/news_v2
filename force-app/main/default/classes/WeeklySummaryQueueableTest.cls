@@ -28,6 +28,23 @@ private class WeeklySummaryQueueableTest {
         NewsOfTheWeek__c after = [SELECT Status__c, News_Head__c FROM NewsOfTheWeek__c WHERE Id = :notw.Id];
         System.assertEquals('Complete', after.Status__c);
         System.assert(after.News_Head__c.contains('Weekly Brief'), 'News head populated');
+
+        List<NewsRun__c> archives = [
+            SELECT News_Head__c, Status__c, News_Of_The_Week__c
+            FROM NewsRun__c
+            WHERE News_Of_The_Week__c = :notw.Id
+        ];
+        System.assertEquals(1, archives.size(), 'A NewsRun snapshot is created on success');
+        System.assertEquals('Complete', archives[0].Status__c);
+        System.assert(archives[0].News_Head__c.contains('Weekly Brief'), 'Snapshot captured the newsletter');
+
+        // Children moved off the config and onto the archived run.
+        System.assertEquals(0,
+            [SELECT COUNT() FROM AccountNews__c WHERE News_Of_The_Week__c = :notw.Id],
+            'No AccountNews left on the config after archive');
+        System.assertEquals(1,
+            [SELECT COUNT() FROM AccountNews__c WHERE News_Run__c = :archives[0].Id],
+            'AccountNews reparented to the NewsRun');
     }
 
     @isTest
@@ -45,6 +62,8 @@ private class WeeklySummaryQueueableTest {
         NewsOfTheWeek__c after = [SELECT Status__c, Error_Log__c FROM NewsOfTheWeek__c WHERE Id = :notw.Id];
         System.assertEquals('Failed', after.Status__c);
         System.assert(after.Error_Log__c.contains('nothing to summarize'));
+        System.assertEquals(0, [SELECT COUNT() FROM NewsRun__c WHERE News_Of_The_Week__c = :notw.Id],
+            'No archive on failure');
     }
 
     @isTest
@@ -73,6 +92,8 @@ private class WeeklySummaryQueueableTest {
         NewsOfTheWeek__c after = [SELECT Status__c, Error_Log__c FROM NewsOfTheWeek__c WHERE Id = :notw.Id];
         System.assertEquals('Failed', after.Status__c);
         System.assert(after.Error_Log__c.contains('Summary step failed'));
+        System.assertEquals(0, [SELECT COUNT() FROM NewsRun__c WHERE News_Of_The_Week__c = :notw.Id],
+            'No archive when the summary template throws');
     }
 
     private static User createSalesperson() {

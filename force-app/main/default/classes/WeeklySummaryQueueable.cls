@@ -11,7 +11,8 @@ public with sharing class WeeklySummaryQueueable implements Queueable, Database.
 
     public void execute(QueueableContext ctx) {
         NewsOfTheWeek__c parent = [
-            SELECT Id, Salesperson__c, Run_Date__c, Status__c, Error_Log__c
+            SELECT Id, Salesperson__c, Run_Date__c, Status__c, Error_Log__c,
+                   Total_Accounts__c, Processed_Accounts__c
             FROM NewsOfTheWeek__c
             WHERE Id = :newsOfTheWeekId
             LIMIT 1
@@ -51,11 +52,60 @@ public with sharing class WeeklySummaryQueueable implements Queueable, Database.
                 : result.text;
             parent.Status__c = 'Complete';
             update parent;
+
+            archiveRun(parent);
         } catch (Exception e) {
             parent.Status__c = 'Failed';
             parent.Error_Log__c = appendErr(parent.Error_Log__c,
                 'Summary step failed: ' + e.getTypeName() + ' - ' + e.getMessage());
             update parent;
+        }
+    }
+
+    /**
+     * Snapshot a successfully completed run into a NewsRun__c archive record so
+     * past newsletters are preserved when the next run overwrites News_Head__c.
+     * Wrapped so an archive failure never flips a genuinely-complete run to Failed.
+     */
+    private void archiveRun(NewsOfTheWeek__c parent) {
+        try {
+            NewsRun__c run = new NewsRun__c(
+                News_Of_The_Week__c = parent.Id,
+                Salesperson__c = parent.Salesperson__c,
+                News_Head__c = parent.News_Head__c,
+                Run_Date__c = parent.Run_Date__c,
+                Status__c = 'Complete',
+                Total_Accounts__c = parent.Total_Accounts__c,
+                Processed_Accounts__c = parent.Processed_Accounts__c
+            );
+            insert run;
+
+            // Move the per-account news off the live config and onto the archived
+            // run, so the config's workspace is clear for the next run while the
+            // history stays browsable under the NewsRun.
+            List<AccountNews__c> children = [
+                SELECT Id
+                FROM AccountNews__c
+                WHERE News_Of_The_Week__c = :parent.Id
+            ];
+            for (AccountNews__c c : children) {
+                c.News_Run__c = run.Id;
+                c.News_Of_The_Week__c = null;
+            }
+            if (!children.isEmpty()) {
+                update children;
+            }
+        } catch (Exception e) {
+            try {
+                NewsOfTheWeek__c log = new NewsOfTheWeek__c(
+                    Id = parent.Id,
+                    Error_Log__c = appendErr(parent.Error_Log__c,
+                        'Run completed but archive (NewsRun) failed: ' + e.getMessage())
+                );
+                update log;
+            } catch (Exception ignored) {
+                // never let archive logging break a completed run
+            }
         }
     }
 

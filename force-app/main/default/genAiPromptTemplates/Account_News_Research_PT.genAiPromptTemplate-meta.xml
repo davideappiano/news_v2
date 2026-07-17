@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
-    <activeVersionIdentifier>4apsoMdAXAxgt2FOX2cmdo17kMUPYJXli2M4yT7/x48=_10</activeVersionIdentifier>
+    <activeVersionIdentifier>CW3Uzn+cgLE35syF9nDlMC//7baF04xE/L9Mx1GAoBs=_14</activeVersionIdentifier>
     <developerName>Account_News_Research_PT</developerName>
     <masterLabel>Account News Research</masterLabel>
     <overridable>false</overridable>
@@ -1391,6 +1391,289 @@ Rules:
         </templateDataProviders>
         <templateFormat>FormulaExpression</templateFormat>
         <versionIdentifier>4apsoMdAXAxgt2FOX2cmdo17kMUPYJXli2M4yT7/x48=_10</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>Summarize ONLY information that is genuinely relevant from a commercial perspective.
+
+Focus exclusively on findings that fit one of these categories:
+1. Relocations, openings, closures, reorganizations, executive appointments, changes in ownership / shareholders / governance.
+2. Acquisitions, mergers, fundraising rounds, financial results, strategic announcements.
+3. Incidents or weak signals: cyberattacks, outages, litigation, strikes, communication crises, negative publicity.
+4. Projects or announcements about IT, cloud, telecommunications, networking, cybersecurity, digital initiatives, business transformation.
+5. Any development that could create a sales opportunity, represent a risk, or be a meaningful topic for customer engagement.
+
+Rules:
+- Discard rumours, marketing fluff, and routine product launches that do not affecft buying behaviour.
+-I want you to put make a long review of the news that explain very precisely the news and the potential impact of the news. I want this to be around 20 lines
+- Group findings under bold category headings; omit any category with no signal.
+- Cite the source URL inline next to every claim.
+- You must put the Date of the news at the beginning
+- Put only fresh news.
+- If absolutely nothing relevant is found, return the single sentence: &amp;quot;No commercially relevant news identified this period.&amp;quot;
+- Put an accent of strong and weak signals.  (if any)
+
+
+News: 
+{!$SalesforceDataAction:webSearchStream.webSearchSummary} 
+
+
+
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>account</apiName>
+            <definition>SOBJECT://Account</definition>
+            <masterLabel>account</masterLabel>
+            <referenceName>Input:account</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>true</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT5</primaryModel>
+        <responseFormat>HTML</responseFormat>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>invocable://webSearchStream</definition>
+            <description>Returns a webSearchSummary (a concise text summary of the top search findings) and citationSources (a list of sources used as references).</description>
+            <label>Search The Web</label>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>searchQuery</parameterName>
+                <valueExpression>Recherche les actualités du dernier mois pour cette société :
+
+Account: {!$Input:account.Name}
+SIREN: {!$Input:account.SIREN__c}
+
+soit le plus exhaustif possible. Je ne veux pas un résumer de chaque news mais un paragraphe de 15 lignes qui m&apos;explique en détails la news. Je veux également que tu intègre le lien des domaines que tu as visité pour avoir les actualités. Je voudrais également que tu rajout la date de l&apos;article si tu ne trouves pas dis que aucune date n&apos;est précisé.
+Règle a absolument respecter :
+Je voudrais enfin que tu rajoutes le lien exact de chaque source et non uniquement le nom de la source.</valueExpression>
+            </parameters>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>false</isRequired>
+                <parameterName>searchProvider</parameterName>
+                <valueExpression>openai</valueExpression>
+            </parameters>
+            <referenceName>SalesforceDataAction:webSearchStream</referenceName>
+        </templateDataProviders>
+        <templateFormat>FormulaExpression</templateFormat>
+        <versionIdentifier>CW3Uzn+cgLE35syF9nDlMC//7baF04xE/L9Mx1GAoBs=_11</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>Summarize ONLY information that is genuinely relevant from a commercial perspective.
+
+Focus exclusively on findings that fit one of these categories:
+1. Relocations, openings, closures, reorganizations, executive appointments, changes in ownership / shareholders / governance.
+2. Acquisitions, mergers, fundraising rounds, financial results, strategic announcements.
+3. Incidents or weak signals: cyberattacks, outages, litigation, strikes, communication crises, negative publicity.
+4. Projects or announcements about IT, cloud, telecommunications, networking, cybersecurity, digital initiatives, business transformation.
+5. Any development that could create a sales opportunity, represent a risk, or be a meaningful topic for customer engagement.
+
+Rules:
+- Discard rumours, marketing fluff, and routine product launches that do not affecft buying behaviour.
+-I want you to put make a long review of the news that explain very precisely the news and the potential impact of the news. I want this to be around 20 lines
+- Group findings under bold category headings; omit any category with no signal.
+- Cite the source URL inline next to every claim.
+- You must put the Date of the news at the beginning
+- Put only fresh news.
+- If absolutely nothing relevant is found, return the single sentence: &amp;quot;No commercially relevant news identified this period.&amp;quot;
+- Put an accent of strong and weak signals.  (if any)
+- if you have more than 2 news just put the 2 biggest news.
+- the output must be under 40 lines
+
+News: 
+{!$SalesforceDataAction:webSearchStream.webSearchSummary} 
+
+
+
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>account</apiName>
+            <definition>SOBJECT://Account</definition>
+            <masterLabel>account</masterLabel>
+            <referenceName>Input:account</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>true</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT5</primaryModel>
+        <responseFormat>HTML</responseFormat>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>invocable://webSearchStream</definition>
+            <description>Returns a webSearchSummary (a concise text summary of the top search findings) and citationSources (a list of sources used as references).</description>
+            <label>Search The Web</label>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>searchQuery</parameterName>
+                <valueExpression>Recherche les actualités du dernier mois pour cette société :
+
+Account: {!$Input:account.Name}
+SIREN: {!$Input:account.SIREN__c}
+
+soit le plus exhaustif possible. Je ne veux pas un résumer de chaque news mais un paragraphe de 15 lignes qui m&apos;explique en détails la news. Je veux également que tu intègre le lien des domaines que tu as visité pour avoir les actualités. Je voudrais également que tu rajout la date de l&apos;article si tu ne trouves pas dis que aucune date n&apos;est précisé.
+Règle a absolument respecter :
+Je voudrais enfin que tu rajoutes le lien exact de chaque source et non uniquement le nom de la source.</valueExpression>
+            </parameters>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>false</isRequired>
+                <parameterName>searchProvider</parameterName>
+                <valueExpression>openai</valueExpression>
+            </parameters>
+            <referenceName>SalesforceDataAction:webSearchStream</referenceName>
+        </templateDataProviders>
+        <templateFormat>FormulaExpression</templateFormat>
+        <versionIdentifier>CW3Uzn+cgLE35syF9nDlMC//7baF04xE/L9Mx1GAoBs=_12</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>Summarize ONLY information that is genuinely relevant from a commercial perspective.
+
+Focus exclusively on findings that fit one of these categories:
+1. Relocations, openings, closures, reorganizations, executive appointments, changes in ownership / shareholders / governance.
+2. Acquisitions, mergers, fundraising rounds, financial results, strategic announcements.
+3. Incidents or weak signals: cyberattacks, outages, litigation, strikes, communication crises, negative publicity.
+4. Projects or announcements about IT, cloud, telecommunications, networking, cybersecurity, digital initiatives, business transformation.
+5. Any development that could create a sales opportunity, represent a risk, or be a meaningful topic for customer engagement.
+
+Rules:
+- Discard rumours, marketing fluff, and routine product launches that do not affecft buying behaviour.
+-I want you to put make a long review of the news that explain very precisely the news and the potential impact of the news. I want this to be around 20 lines
+- Group findings under bold category headings; omit any category with no signal.
+- Cite the source URL inline next to every claim.
+- You must put the Date of the news at the beginning
+- Put only fresh news.
+- If absolutely nothing relevant is found, return the single sentence: &amp;quot;No commercially relevant news identified this period.&amp;quot;
+- Put an accent of strong and weak signals.  (if any)
+- if you have more than 2 news just put the 2 biggest news.
+- the output must be under 40 lines
+- you don&apos;t find news just put &quot;No news&quot; as output.
+News: 
+{!$SalesforceDataAction:webSearchStream.webSearchSummary} 
+
+
+
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>account</apiName>
+            <definition>SOBJECT://Account</definition>
+            <masterLabel>account</masterLabel>
+            <referenceName>Input:account</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>true</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT5</primaryModel>
+        <responseFormat>HTML</responseFormat>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>invocable://webSearchStream</definition>
+            <description>Returns a webSearchSummary (a concise text summary of the top search findings) and citationSources (a list of sources used as references).</description>
+            <label>Search The Web</label>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>searchQuery</parameterName>
+                <valueExpression>Recherche les actualités du dernier mois pour cette société :
+
+Account: {!$Input:account.Name}
+SIREN: {!$Input:account.SIREN__c}
+
+soit le plus exhaustif possible. Je ne veux pas un résumer de chaque news mais un paragraphe de 15 lignes qui m&apos;explique en détails la news. Je veux également que tu intègre le lien des domaines que tu as visité pour avoir les actualités. Je voudrais également que tu rajout la date de l&apos;article si tu ne trouves pas dis que aucune date n&apos;est précisé.
+Règle a absolument respecter :
+Je voudrais enfin que tu rajoutes le lien exact de chaque source et non uniquement le nom de la source.</valueExpression>
+            </parameters>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>false</isRequired>
+                <parameterName>searchProvider</parameterName>
+                <valueExpression>openai</valueExpression>
+            </parameters>
+            <referenceName>SalesforceDataAction:webSearchStream</referenceName>
+        </templateDataProviders>
+        <templateFormat>FormulaExpression</templateFormat>
+        <versionIdentifier>CW3Uzn+cgLE35syF9nDlMC//7baF04xE/L9Mx1GAoBs=_13</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>Summarize ONLY information that is genuinely relevant from a commercial perspective.
+
+Focus exclusively on findings that fit one of these categories:
+1. Relocations, openings, closures, reorganizations, executive appointments, changes in ownership / shareholders / governance.
+2. Acquisitions, mergers, fundraising rounds, financial results, strategic announcements.
+3. Incidents or weak signals: cyberattacks, outages, litigation, strikes, communication crises, negative publicity.
+4. Projects or announcements about IT, cloud, telecommunications, networking, cybersecurity, digital initiatives, business transformation.
+5. Any development that could create a sales opportunity, represent a risk, or be a meaningful topic for customer engagement.
+
+Rules:
+- Discard rumours, marketing fluff, and routine product launches that do not affecft buying behaviour.
+-I want you to put make a long review of the news that explain very precisely the news and the potential impact of the news. I want this to be around 20 lines
+- Group findings under bold category headings; omit any category with no signal.
+- Cite the source URL inline next to every claim.
+- You must put the Date of the news at the beginning
+- Put only fresh news.
+- If absolutely nothing relevant is found, return the single sentence: &amp;quot;No commercially relevant news identified this period.&amp;quot;
+- Put an accent of strong and weak signals.  (if any)
+- if you have more than 2 news just put the 2 biggest news.
+- the output must be under 40 lines
+- you don&apos;t find news just put &quot;No news&quot; as output.
+News: 
+{!$SalesforceDataAction:webSearchStream.webSearchSummary} 
+
+
+
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>account</apiName>
+            <definition>SOBJECT://Account</definition>
+            <masterLabel>account</masterLabel>
+            <referenceName>Input:account</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>true</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT5</primaryModel>
+        <responseFormat>HTML</responseFormat>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>invocable://webSearchStream</definition>
+            <description>Returns a webSearchSummary (a concise text summary of the top search findings) and citationSources (a list of sources used as references).</description>
+            <label>Search The Web</label>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>searchQuery</parameterName>
+                <valueExpression>Recherche les actualités du dernier mois pour cette société :
+
+Account: {!$Input:account.Name}
+SIREN: {!$Input:account.SIREN__c}
+
+je veux que tu cherche des information uniquement des news sur  la société avec ce nom et ce SIREN. Soit le plus exhaustif possible. Je ne veux pas un résumer de chaque news mais un paragraphe de 15 lignes qui m&apos;explique en détails la news. Je veux également que tu intègre le lien des domaines que tu as visité pour avoir les actualités. Je voudrais également que tu rajout la date de l&apos;article si tu ne trouves pas dis que aucune date n&apos;est précisé.
+Règle a absolument respecter :
+Je voudrais enfin que tu rajoutes le lien exact de chaque source et non uniquement le nom de la source.</valueExpression>
+            </parameters>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>false</isRequired>
+                <parameterName>searchProvider</parameterName>
+                <valueExpression>openai</valueExpression>
+            </parameters>
+            <referenceName>SalesforceDataAction:webSearchStream</referenceName>
+        </templateDataProviders>
+        <templateFormat>FormulaExpression</templateFormat>
+        <versionIdentifier>CW3Uzn+cgLE35syF9nDlMC//7baF04xE/L9Mx1GAoBs=_14</versionIdentifier>
     </templateVersions>
     <type>einstein_gpt__flex</type>
     <visibility>Global</visibility>

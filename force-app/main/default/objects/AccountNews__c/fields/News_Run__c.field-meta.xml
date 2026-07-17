@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>News_Of_The_Week__c</fullName>
+    <fullName>News_Run__c</fullName>
     <deleteConstraint>SetNull</deleteConstraint>
-    <description>The live config this news belongs to while a run is in progress. Cleared when the run is archived (the record moves to News Run).</description>
+    <description>The archived run this news belongs to. Set when the run completes and the record is moved off the live config.</description>
     <externalId>false</externalId>
-    <label>News Of The Week</label>
-    <referenceTo>NewsOfTheWeek__c</referenceTo>
+    <label>News Run</label>
+    <referenceTo>NewsRun__c</referenceTo>
     <relationshipLabel>Account News</relationshipLabel>
     <relationshipName>AccountNews</relationshipName>
     <required>false</required>

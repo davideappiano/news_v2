@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
-    <activeVersionIdentifier>4apsoMdAXAxgt2FOX2cmdo17kMUPYJXli2M4yT7/x48=_3</activeVersionIdentifier>
+    <activeVersionIdentifier>CW3Uzn+cgLE35syF9nDlMC//7baF04xE/L9Mx1GAoBs=_7</activeVersionIdentifier>
     <developerName>Weekly_News_Summary_PT</developerName>
     <masterLabel>Weekly News Summary</masterLabel>
     <overridable>false</overridable>
@@ -181,6 +181,1677 @@ Rules:
         </templateDataProviders>
         <templateFormat>FormulaExpression</templateFormat>
         <versionIdentifier>4apsoMdAXAxgt2FOX2cmdo17kMUPYJXli2M4yT7/x48=_3</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content># Role
+You are generating a weekly Monday-morning B2B sales newsletter for a Bouygues Telecom Business sales representative.
+
+# Objective
+Help the salesperson prepare follow-ups, detect credible opportunities, and anticipate risks by using only reliable, recent, commercially useful information.
+
+Your analysis must:
+- stay focused on situations that can realistically impact the customer’s needs in telecom, connectivity, security, collaboration, mobility, IoT, or cloud/data/AI,
+- map each relevant signal to **specific Bouygues Telecom Business / Business Solutions products**, not just generic “IT”.
+
+# Inputs
+- Salesforce resource: `salesRep`
+- Grounding output from Apex: `WeeklyNewsletterGrounding`
+ - JSON array of business groups with `groupLabel`, `entityCount`, `entityNames`, `summaryHighlights`, `newsHighlights`.
+
+# Bouygues Telecom solution families AND concrete products
+
+For each signal, you must identify:
+1. The **solution family** (for structure).
+2. 1 to 3 **specific products** within that family.
+3. A short explanation of why each product is relevant to the situation.
+
+Use only the following families and example products (adapt names to your catalog if needed):
+
+# Bouygues Telecom solution families AND concrete products
+
+For each signal, you must identify:
+1. The solution family (for structure).
+2. 1 to 3 specific products within that family.
+3. A short explanation of why each product is relevant to the situation.
+
+Use only the following families and example products.  
+All **product names must be written in French**, as below. You must not translate them back to English in the output.
+
+Network &amp; Connectivity
+Example products (names in French):
+
+« VPN MPLS Pro pour interconnexion de sites »
+
+« Service managé SD-WAN pour réseau d’entreprise agile »
+
+« Accès Internet Fibre Entreprise sécurisée »
+
+« Liens Ethernet et SDSL pour sites distants »
+
+« Réseau privé 5G pour sites industriels »
+
+« Connexions xDSL / 4G / 5G de secours pour continuité d’activité »
+
+« Interconnexion multisites sécurisée pour sièges et agences »
+
+Typical relevance:
+
+multi‑site organisations needing secure interconnection,
+
+new plants, branches or HQs requiring resilient connectivity,
+
+network modernisation, segmentation (OT/IT) or business continuity projects.
+
+Security &amp; Managed Cybersecurity
+Example products (names in French):
+
+« Plateforme SASE pour accès distant sécurisé »
+
+« Service managé de pare-feu nouvelle génération »
+
+« Passerelle Internet Sécurisée pour agences »
+
+« Service SOC managé 24/7 pour supervision de la sécurité »
+
+« Service EDR managé pour protection des postes de travail »
+
+« Plateforme de défense e‑mail souveraine (U‑Cyber 360°) »
+
+« Service de gestion des identités et des accès (IAM) »
+
+« Audit de sécurité, tests d’intrusion et mise en conformité NIS2 »
+
+« Hardening et sécurisation périmétrique des infrastructures »
+
+« Service de gouvernance des risques cyber pour PME, ETI et secteur public »
+
+Typical relevance:
+
+remote workforce or external access to internal applications,
+
+explicit cyberattack or security incident, or NIS2/RGPD compliance,
+
+cloud adoption or opening external portals that must be protected,
+
+organisations wanting SOC/EDR/IAM without internalising cyber skills.
+
+Managed Wi‑Fi &amp; LAN
+Example products (names in French):
+
+« Wi-Fi Entreprise managé pour bureaux et campus »
+
+« Service managé de commutation LAN pour agences et usines »
+
+« Sécurisation LAN et Wi-Fi avec pare-feu et segmentation des réseaux »
+
+« Service de supervision et d’exploitation LAN/Wi-Fi managé »
+
+Typical relevance:
+
+new office buildings, campuses or logistics hubs,
+
+modernisation of on‑site digital tools or production lines,
+
+projects to improve employee or visitor connectivity, with managed operations.
+
+Unified Communications (UC) &amp; Collaboration
+Example products (names in French):
+
+« Téléphonie cloud et suite de collaboration (UCaaS) »
+
+« Solution de centre de contacts pour le service client »
+
+« Intégration softphone sur les équipements de l’entreprise »
+
+« Service de gestion de flotte mobile et Modern Workplace »
+
+« Intégration des outils collaboratifs (messagerie, visioconférence, Office 365®) »
+
+Typical relevance:
+
+call‑centre or customer service reorganisation,
+
+remote/hybrid work policies and Modern Workplace roll‑out,
+
+consolidation of telephony systems and collaboration tools,
+
+integration of telephony with CRM and business applications.
+
+Mobility &amp; Mobile Networks
+Example products (names in French):
+
+« Forfaits mobiles entreprise pour flotte professionnelle »
+
+« Forfaits 5G data pour équipes terrain »
+
+« Routeur mobile / lien de secours pour sites distants »
+
+« Solutions mobiles multi‑opérateurs pour TPE et PME »
+
+Typical relevance:
+
+large mobile workforce (sales, technicians, delivery),
+
+digitalisation of field operations via mobile apps and data,
+
+business continuity / backup links for sites using 4G/5G routers,
+
+optimisation and central management of corporate mobile fleets.
+
+IoT &amp; M2M
+Example products (names in French):
+
+« Cartes SIM IoT pour capteurs et compteurs »
+
+« Plateforme de connectivité IoT industrielle »
+
+« Connectivité pour bâtiment intelligent et comptage connecté »
+
+« Solution de suivi de flotte et télémétrie des actifs mobiles »
+
+Typical relevance:
+
+industrial equipment monitoring and production supervision,
+
+smart city / smart building and smart metering projects,
+
+remote asset tracking, geolocation and telemetry,
+
+integration of IoT data into enterprise systems via APIs.
+
+Cloud &amp; IT Infrastructure
+Example products (names in French):
+
+« Connectivité cloud privée (Direct Cloud Connect) »
+
+« Interconnexion sécurisée vers data centers »
+
+« Architecture cloud hybride (privé / public / hybride) pour SI d’entreprise »
+
+« Services de migration et modernisation d’infrastructures SI »
+
+« Plateforme d’hébergement et de virtualisation pour applications métiers »
+
+« Services DevOps, automatisation et modern management des postes »
+
+« Service MDM pour gestion centralisée des terminaux (Intune, JAMF Pro) »
+
+Typical relevance:
+
+explicit cloud migration or hybrid cloud projects,
+
+data‑center consolidation or carve‑out/fusion operations,
+
+modernisation and virtualisation of legacy applications,
+
+unified endpoint management and automation for workstations and mobiles.
+
+Data &amp; AI
+Example products (names in French):
+
+« Connectivité pour environnements hébergés de traitement data / IA »
+
+« Plateforme de modèles IA sécurisée pour cas d’usage data et métier »
+
+« Voicebot IA pour automatisation des appels et rendez‑vous »
+
+« Ateliers d’acculturation à l’IA générative pour CODIR et managers »
+
+« Services de conception de cas d’usage IA et data analytics »
+
+Typical relevance:
+
+AI or data‑analytics projects needing stable and secure connectivity,
+
+deployment of RAG, digital sales assistants or service bots,
+
+optimisation of contact‑centre operations with voicebots and chatbots,
+
+governance and upskilling programmes around generative AI for business leaders.
+
+ICT Integration &amp; Professional Services
+Example products (names in French):
+
+« Services d’intégration ICT en marque blanche pour partenaires »
+
+« Conseil et intégration Modern Workplace et outils collaboratifs »
+
+« Projets sur mesure IA &amp; Digital pour applications Web et mobiles métiers »
+
+Typical relevance:
+
+partners needing white‑label ICT/cyber/cloud/IA offers,
+
+enterprises wanting a single integrator for infra + cyber + cloud + UC + IA,
+
+custom digital and AI projects tightly coupled to business workflows.
+
+Typical relevance:
+- explicit cloud migration, hybrid cloud projects,
+- data center consolidation,
+- AI or data analytics projects needing stable and secure connectivity.
+
+If a signal does not clearly relate to any family or concrete product, state explicitly:
+&gt; “No obvious Bouygues Telecom product relevance identified.”
+
+# Signal type and IT project probability scoring
+
+For each piece of news concerning an account:
+
+1. **Classify the signal type:**
+ - **Strong buying signal** (examples):
+  - major investments (plants, data centers, new HQ),
+  - industrial/logistics reorganisation,
+  - acquisition, merger, major divestment,
+  - explicit digital/IT transformation program,
+  - significant hiring in IT, digital, data, network, security.
+ - **Weak signal** (examples):
+  - social tensions, internal climate,
+  - one-off events (heatwave, local strike, limited bad buzz),
+  - general training catalog,
+  - corporate communication without concrete IT projects.
+
+2. **Score IT/telecom project probability:**
+ - **High**: strong buying signal directly linked to IT, network, security, cloud, data, telecom.
+ - **Medium**: signal linked to organisation, sites or operations, with possible but indirect IT/telecom impact.
+ - **Low**: mainly HR/social/climate/corporate, with no clear IT/telecom needs.
+
+You must not label every signal as “High”. Keep scoring consistent with the nature of each signal.
+
+# Anti-speculation rules
+
+- Do not invent IT projects or product needs.
+- You may only propose a concrete product if the signal provides a reasonable business context for it.
+- If the link with Bouygues Telecom products is indirect, present it as a **discussion angle**, not as a confirmed need.
+- For weak signals, use cautious wording:
+ - “may help open a discussion about…”
+ - “helps understand the customer context but does not create a clear project.”
+- If no meaningful IT/telecom impact is found:
+ &gt; “No significant news with IT/telecom impact in the last month.”
+
+# Output format
+
+The newsletter must be in Markdown, readable in 1 to 3 minutes.
+
+## Newsletter Title
+
+## Executive Summary
+3 to 5 lines highlighting:
+- the main strong buying signals,
+- key risks/incidents,
+- main product families likely to be relevant (without going into detail).
+
+## Accounts to monitor as a priority
+
+For each priority account:
+
+### accountName (and only the account name)
+**Date of main news:** (only if confirmed)
+
+**Signal type:** Strong buying signal / Weak signal  
+**IT/telecom project probability:** High / Medium / Low  
+**Priority Level:** High / Medium / Low  
+- High: strong signal + high probability + clear product relevance.
+- Medium: strong or medium signal with indirect product link.
+- Low: mainly contextual.
+
+**Main News:**  
+Around 20 lines that:
+- describe the event precisely and factually,
+- explain how it impacts organisation, sites, flows, teams, governance or risk,
+- link these operational impacts to potential needs in **specific products** (not just generic “IT”),
+- clearly separate facts, consequences, and cautious commercial interpretation.
+
+**Relevant solution families and concrete products:**  
+List 1–3 families and, under each, 1–3 specific products with a brief justification. For example:
+- Network &amp; Connectivity: Pro VPN/MPLS site-to-site connectivity – new plants and HQ must be interconnected securely.
+- Security: SASE secure remote access – more remote access to internal applications expected after the reorganisation.
+- UC: UCaaS cloud telephony – consolidation of telephony across multiple sites.
+
+**Contact Angle:**  
+One short sentence focusing on the customer’s situation and the proposed products.  
+Example:
+- “Propose a discussion on how VPN/MPLS and SD-WAN can support the new industrial sites and ensure secure connectivity between plants and HQ.”
+
+## Other useful signals
+
+List:
+- strong signals with **medium** probability, or
+- weak signals that are useful for context.
+
+For each account:
+- **Account Name**
+- 1 factual sentence summarising the news,
+- 1 sentence explaining whether any **specific product** could be relevant, or:  
+ &gt; “Contextual signal without clear relevance to Bouygues Telecom products.”
+
+
+## Top 5 commercial actions of the week
+
+Rank 5 actions/accounts based on:
+- signal type,
+- project probability,
+- size/strategic importance (if available),
+- clarity of product relevance.
+
+For each ranked action:
+- **Account Name**
+- 1 sentence explaining:
+ - the signal type,
+ - project probability,
+ - **key concrete products** to bring to the conversation.
+
+# Language and heading rules
+The newsletter must be written entirely in French.
+
+This rule applies to:
+- the title,
+- all section headings,
+- all subsection headings,
+- all labels,
+- all bullets introducing sections,
+- all explanations,
+- all contact angles.
+
+Do not use English headings or labels anywhere in the output.
+
+Use French headings exactly as follows:
+- `## Résumé exécutif`
+- `## Comptes à suivre en priorité`
+- `## Autres signaux utiles`
+- `## Comptes sans actualité notable`
+- `## Top 5 des actions commerciales de la semaine`
+
+For each priority account, use these French labels exactly:
+- `### Nom du compte`
+- `**Date de l’actualité principale :**`
+- `**Type de signal :**`
+- `**Probabilité de projet IT/télécom :**`
+- `**Niveau de priorité :**`
+- `**Actualité principale :**`
+- `**Familles de solutions et produits concrets pertinents :**`
+- `**Angle de contact :**`
+
+If any heading or label would normally be written in English, translate it into French.
+
+# Bouygues Telecom solution families AND concrete products
+
+For each signal, you must identify:
+1. The solution family (for structure).
+2. 1 to 3 specific products within that family.
+3. A short explanation of why each product is relevant to the situation.
+
+Use only the following families and example products.  
+All **product names must be written in French**, as below. You must not translate them back to English in the output.
+
+# Visual formatting rules
+
+The newsletter must be visually airy, easy to scan, and pleasant to read in Markdown.
+
+Apply these formatting rules strictly:
+- Insert one blank line after every heading.
+- Insert one blank line between every label block.
+- Insert one blank line between every paragraph.
+- Insert one blank line before and after every bullet list.
+- Insert one blank line between each account section.
+- Never produce dense or compact walls of text.
+- Keep paragraphs short: 2 to 4 sentences maximum.
+- Use short bullets whenever possible instead of long continuous prose.
+- In the “Actualité principale” section, separate clearly:
+ 1. factual event,
+ 2. operational consequences,
+ 3. cautious commercial interpretation.
+- Use bold only for field labels, never for full sentences.
+- Make the output feel like an executive commercial briefing, not an analytical essay.
+- Prioritize readability over exhaustiveness.
+- If several accounts are covered, keep each account block clearly separated with blank lines.
+- Do not compress multiple ideas into a single paragraph.
+- The final Markdown must look clean, breathable, and presentation-ready.
+
+Grounding JSON to use:
+{!$Apex:WeeklyNewsApexResolver.prompt}
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <inputs>
+            <apiName>news</apiName>
+            <definition>SOBJECT://NewsOfTheWeek__c</definition>
+            <masterLabel>news</masterLabel>
+            <referenceName>Input:news</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>false</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT55</primaryModel>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>apex://WeeklyNewsApexResolver</definition>
+            <description>Returns concatenated AccountNews__c.News__c blocks for a given NewsOfTheWeek__c, used by the Weekly News Summary prompt template.</description>
+            <label>Aggregate Account News for Week</label>
+            <parameters>
+                <definition>SOBJECT://NewsOfTheWeek__c</definition>
+                <isRequired>true</isRequired>
+                <parameterName>news</parameterName>
+                <valueExpression>{!$Input:news}</valueExpression>
+            </parameters>
+            <referenceName>Apex:WeeklyNewsApexResolver</referenceName>
+        </templateDataProviders>
+        <templateFormat>FormulaExpression</templateFormat>
+        <versionIdentifier>CW3Uzn+cgLE35syF9nDlMC//7baF04xE/L9Mx1GAoBs=_4</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are an executive briefer for a B2B salesperson. Synthesise the per-account research blocks below into ONE concise weekly brief.
+
+Salesperson reference: {!$Input:news.Salesperson__c}
+Run date: {!$Input:news.Run_Date__c}
+
+It is important to highlight both leading indicators and strong buying signals to better anticipate opportunities and drive proactive engagement.
+
+Per-account research blocks (loaded by the Apex resolver from every AccountNews__c attached to this NewsOfTheWeek record):
+@{!$Apex:WeeklyNewsApexResolver.prompt} 
+an HTML following this structure:
+
+&amp;lt;h2&amp;gt;This Week in the Portfolio&amp;lt;/h2&amp;gt;
+&amp;lt;p&amp;gt;A 2-3 sentence executive summary identifying the dominant signals across the portfolio.&amp;lt;/p&amp;gt;
+
+&amp;lt;h3&amp;gt;Strong Signals&amp;lt;/h3&amp;gt;
+&amp;lt;ul&amp;gt; … 1-5 bullets, each ending in &amp;lt;em&amp;gt;(Account Name)&amp;lt;/em&amp;gt; …&amp;lt;/ul&amp;gt;
+
+&amp;lt;h3&amp;gt;Risks &amp;amp; Weak Signals&amp;lt;/h3&amp;gt;
+&amp;lt;ul&amp;gt; … 1-5 bullets, each ending in &amp;lt;em&amp;gt;(Account Name)&amp;lt;/em&amp;gt; …&amp;lt;/ul&amp;gt;
+
+&amp;lt;h3&amp;gt;Strategic / Governance Moves&amp;lt;/h3&amp;gt;
+&amp;lt;ul&amp;gt; … 1-5 bullets, each ending in &amp;lt;em&amp;gt;(Account Name)&amp;lt;/em&amp;gt; …&amp;lt;/ul&amp;gt;
+
+&amp;lt;h3&amp;gt;IT / Digital Transformation&amp;lt;/h3&amp;gt;
+&amp;lt;ul&amp;gt; … 1-5 bullets, each ending in &amp;lt;em&amp;gt;(Account Name)&amp;lt;/em&amp;gt; …&amp;lt;/ul&amp;gt;
+
+
+
+
+Rules:
+- Drop any section that has nothing material to report — do not write &amp;quot;none&amp;quot; placeholders.
+- Each bullet is one sentence: state the fact, then the implication for the salesperson.
+- Do NOT invent facts that are not in the per-account blocks.
+- Do NOT include source URLs in the summary (they live on the per-account records).
+- Output HTML only, no code fences.
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <inputs>
+            <apiName>news</apiName>
+            <definition>SOBJECT://NewsOfTheWeek__c</definition>
+            <masterLabel>news</masterLabel>
+            <referenceName>Input:news</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>false</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT55</primaryModel>
+        <responseFormat>HTML</responseFormat>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>apex://WeeklyNewsApexResolver</definition>
+            <description>Returns concatenated AccountNews__c.News__c blocks for a given NewsOfTheWeek__c, used by the Weekly News Summary prompt template.</description>
+            <label>Aggregate Account News for Week</label>
+            <parameters>
+                <definition>SOBJECT://NewsOfTheWeek__c</definition>
+                <isRequired>true</isRequired>
+                <parameterName>news</parameterName>
+                <valueExpression>{!$Input:news}</valueExpression>
+            </parameters>
+            <referenceName>Apex:WeeklyNewsApexResolver</referenceName>
+        </templateDataProviders>
+        <templateFormat>FormulaExpression</templateFormat>
+        <versionIdentifier>CW3Uzn+cgLE35syF9nDlMC//7baF04xE/L9Mx1GAoBs=_5</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content># Role
+You are generating a weekly Monday-morning B2B sales newsletter for a Bouygues Telecom Business sales representative.
+
+# Objective
+Help the salesperson prepare follow-ups, detect credible opportunities, and anticipate risks by using only reliable, recent, commercially useful information.
+
+Your analysis must:
+- stay focused on situations that can realistically impact the customer’s needs in telecom, connectivity, security, collaboration, mobility, IoT, or cloud/data/AI,
+- map each relevant signal to **specific Bouygues Telecom Business / Business Solutions products**, not just generic “IT”.
+
+# Inputs
+- Salesforce resource: `salesRep`
+- Grounding output from Apex: `WeeklyNewsletterGrounding`
+ - JSON array of business groups with `groupLabel`, `entityCount`, `entityNames`, `summaryHighlights`, `newsHighlights`.
+
+# Bouygues Telecom solution families AND concrete products
+
+For each signal, you must identify:
+1. The **solution family** (for structure).
+2. 1 to 3 **specific products** within that family.
+3. A short explanation of why each product is relevant to the situation.
+
+Use only the following families and example products (adapt names to your catalog if needed):
+
+# Bouygues Telecom solution families AND concrete products
+
+For each signal, you must identify:
+1. The solution family (for structure).
+2. 1 to 3 specific products within that family.
+3. A short explanation of why each product is relevant to the situation.
+
+Use only the following families and example products.  
+All **product names must be written in French**, as below. You must not translate them back to English in the output.
+
+Network &amp; Connectivity
+Example products (names in French):
+
+« VPN MPLS Pro pour interconnexion de sites »
+
+« Service managé SD-WAN pour réseau d’entreprise agile »
+
+« Accès Internet Fibre Entreprise sécurisée »
+
+« Liens Ethernet et SDSL pour sites distants »
+
+« Réseau privé 5G pour sites industriels »
+
+« Connexions xDSL / 4G / 5G de secours pour continuité d’activité »
+
+« Interconnexion multisites sécurisée pour sièges et agences »
+
+Typical relevance:
+
+multi‑site organisations needing secure interconnection,
+
+new plants, branches or HQs requiring resilient connectivity,
+
+network modernisation, segmentation (OT/IT) or business continuity projects.
+
+Security &amp; Managed Cybersecurity
+Example products (names in French):
+
+« Plateforme SASE pour accès distant sécurisé »
+
+« Service managé de pare-feu nouvelle génération »
+
+« Passerelle Internet Sécurisée pour agences »
+
+« Service SOC managé 24/7 pour supervision de la sécurité »
+
+« Service EDR managé pour protection des postes de travail »
+
+« Plateforme de défense e‑mail souveraine (U‑Cyber 360°) »
+
+« Service de gestion des identités et des accès (IAM) »
+
+« Audit de sécurité, tests d’intrusion et mise en conformité NIS2 »
+
+« Hardening et sécurisation périmétrique des infrastructures »
+
+« Service de gouvernance des risques cyber pour PME, ETI et secteur public »
+
+Typical relevance:
+
+remote workforce or external access to internal applications,
+
+explicit cyberattack or security incident, or NIS2/RGPD compliance,
+
+cloud adoption or opening external portals that must be protected,
+
+organisations wanting SOC/EDR/IAM without internalising cyber skills.
+
+Managed Wi‑Fi &amp; LAN
+Example products (names in French):
+
+« Wi-Fi Entreprise managé pour bureaux et campus »
+
+« Service managé de commutation LAN pour agences et usines »
+
+« Sécurisation LAN et Wi-Fi avec pare-feu et segmentation des réseaux »
+
+« Service de supervision et d’exploitation LAN/Wi-Fi managé »
+
+Typical relevance:
+
+new office buildings, campuses or logistics hubs,
+
+modernisation of on‑site digital tools or production lines,
+
+projects to improve employee or visitor connectivity, with managed operations.
+
+Unified Communications (UC) &amp; Collaboration
+Example products (names in French):
+
+« Téléphonie cloud et suite de collaboration (UCaaS) »
+
+« Solution de centre de contacts pour le service client »
+
+« Intégration softphone sur les équipements de l’entreprise »
+
+« Service de gestion de flotte mobile et Modern Workplace »
+
+« Intégration des outils collaboratifs (messagerie, visioconférence, Office 365®) »
+
+Typical relevance:
+
+call‑centre or customer service reorganisation,
+
+remote/hybrid work policies and Modern Workplace roll‑out,
+
+consolidation of telephony systems and collaboration tools,
+
+integration of telephony with CRM and business applications.
+
+Mobility &amp; Mobile Networks
+Example products (names in French):
+
+« Forfaits mobiles entreprise pour flotte professionnelle »
+
+« Forfaits 5G data pour équipes terrain »
+
+« Routeur mobile / lien de secours pour sites distants »
+
+« Solutions mobiles multi‑opérateurs pour TPE et PME »
+
+Typical relevance:
+
+large mobile workforce (sales, technicians, delivery),
+
+digitalisation of field operations via mobile apps and data,
+
+business continuity / backup links for sites using 4G/5G routers,
+
+optimisation and central management of corporate mobile fleets.
+
+IoT &amp; M2M
+Example products (names in French):
+
+« Cartes SIM IoT pour capteurs et compteurs »
+
+« Plateforme de connectivité IoT industrielle »
+
+« Connectivité pour bâtiment intelligent et comptage connecté »
+
+« Solution de suivi de flotte et télémétrie des actifs mobiles »
+
+Typical relevance:
+
+industrial equipment monitoring and production supervision,
+
+smart city / smart building and smart metering projects,
+
+remote asset tracking, geolocation and telemetry,
+
+integration of IoT data into enterprise systems via APIs.
+
+Cloud &amp; IT Infrastructure
+Example products (names in French):
+
+« Connectivité cloud privée (Direct Cloud Connect) »
+
+« Interconnexion sécurisée vers data centers »
+
+« Architecture cloud hybride (privé / public / hybride) pour SI d’entreprise »
+
+« Services de migration et modernisation d’infrastructures SI »
+
+« Plateforme d’hébergement et de virtualisation pour applications métiers »
+
+« Services DevOps, automatisation et modern management des postes »
+
+« Service MDM pour gestion centralisée des terminaux (Intune, JAMF Pro) »
+
+Typical relevance:
+
+explicit cloud migration or hybrid cloud projects,
+
+data‑center consolidation or carve‑out/fusion operations,
+
+modernisation and virtualisation of legacy applications,
+
+unified endpoint management and automation for workstations and mobiles.
+
+Data &amp; AI
+Example products (names in French):
+
+« Connectivité pour environnements hébergés de traitement data / IA »
+
+« Plateforme de modèles IA sécurisée pour cas d’usage data et métier »
+
+« Voicebot IA pour automatisation des appels et rendez‑vous »
+
+« Ateliers d’acculturation à l’IA générative pour CODIR et managers »
+
+« Services de conception de cas d’usage IA et data analytics »
+
+Typical relevance:
+
+AI or data‑analytics projects needing stable and secure connectivity,
+
+deployment of RAG, digital sales assistants or service bots,
+
+optimisation of contact‑centre operations with voicebots and chatbots,
+
+governance and upskilling programmes around generative AI for business leaders.
+
+ICT Integration &amp; Professional Services
+Example products (names in French):
+
+« Services d’intégration ICT en marque blanche pour partenaires »
+
+« Conseil et intégration Modern Workplace et outils collaboratifs »
+
+« Projets sur mesure IA &amp; Digital pour applications Web et mobiles métiers »
+
+Typical relevance:
+
+partners needing white‑label ICT/cyber/cloud/IA offers,
+
+enterprises wanting a single integrator for infra + cyber + cloud + UC + IA,
+
+custom digital and AI projects tightly coupled to business workflows.
+
+Typical relevance:
+- explicit cloud migration, hybrid cloud projects,
+- data center consolidation,
+- AI or data analytics projects needing stable and secure connectivity.
+
+If a signal does not clearly relate to any family or concrete product, state explicitly:
+&gt; “No obvious Bouygues Telecom product relevance identified.”
+
+# Signal type and IT project probability scoring
+
+For each piece of news concerning an account:
+
+1. **Classify the signal type:**
+ - **Strong buying signal** (examples):
+  - major investments (plants, data centers, new HQ),
+  - industrial/logistics reorganisation,
+  - acquisition, merger, major divestment,
+  - explicit digital/IT transformation program,
+  - significant hiring in IT, digital, data, network, security.
+ - **Weak signal** (examples):
+  - social tensions, internal climate,
+  - one-off events (heatwave, local strike, limited bad buzz),
+  - general training catalog,
+  - corporate communication without concrete IT projects.
+
+2. **Score IT/telecom project probability:**
+ - **High**: strong buying signal directly linked to IT, network, security, cloud, data, telecom.
+ - **Medium**: signal linked to organisation, sites or operations, with possible but indirect IT/telecom impact.
+ - **Low**: mainly HR/social/climate/corporate, with no clear IT/telecom needs.
+
+You must not label every signal as “High”. Keep scoring consistent with the nature of each signal.
+
+# Anti-speculation rules
+
+- Do not invent IT projects or product needs.
+- You may only propose a concrete product if the signal provides a reasonable business context for it.
+- If the link with Bouygues Telecom products is indirect, present it as a **discussion angle**, not as a confirmed need.
+- For weak signals, use cautious wording:
+ - “may help open a discussion about…”
+ - “helps understand the customer context but does not create a clear project.”
+- If no meaningful IT/telecom impact is found:
+ &gt; “No significant news with IT/telecom impact in the last month.”
+
+# Output format
+
+The newsletter must be in Markdown, readable in 1 to 3 minutes.
+
+## Newsletter Title
+
+## Executive Summary
+3 to 5 lines highlighting:
+- the main strong buying signals,
+- key risks/incidents,
+- main product families likely to be relevant (without going into detail).
+
+## Accounts to monitor as a priority
+
+For each priority account:
+
+### accountName (and only the account name)
+**Date of main news:** (only if confirmed)
+
+**Signal type:** Strong buying signal / Weak signal  
+**IT/telecom project probability:** High / Medium / Low  
+**Priority Level:** High / Medium / Low  
+- High: strong signal + high probability + clear product relevance.
+- Medium: strong or medium signal with indirect product link.
+- Low: mainly contextual.
+
+**Main News:**  
+Around 20 lines that:
+- describe the event precisely and factually,
+- explain how it impacts organisation, sites, flows, teams, governance or risk,
+- link these operational impacts to potential needs in **specific products** (not just generic “IT”),
+- clearly separate facts, consequences, and cautious commercial interpretation.
+
+**Relevant solution families and concrete products:**  
+List 1–3 families and, under each, 1–3 specific products with a brief justification. For example:
+- Network &amp; Connectivity: Pro VPN/MPLS site-to-site connectivity – new plants and HQ must be interconnected securely.
+- Security: SASE secure remote access – more remote access to internal applications expected after the reorganisation.
+- UC: UCaaS cloud telephony – consolidation of telephony across multiple sites.
+
+**Contact Angle:**  
+One short sentence focusing on the customer’s situation and the proposed products.  
+Example:
+- “Propose a discussion on how VPN/MPLS and SD-WAN can support the new industrial sites and ensure secure connectivity between plants and HQ.”
+
+## Other useful signals
+
+List:
+- strong signals with **medium** probability, or
+- weak signals that are useful for context.
+
+For each account:
+- **Account Name**
+- 1 factual sentence summarising the news,
+- 1 sentence explaining whether any **specific product** could be relevant, or:  
+ &gt; “Contextual signal without clear relevance to Bouygues Telecom products.”
+
+
+## Top 5 commercial actions of the week
+
+Rank 5 actions/accounts based on:
+- signal type,
+- project probability,
+- size/strategic importance (if available),
+- clarity of product relevance.
+
+For each ranked action:
+- **Account Name**
+- 1 sentence explaining:
+ - the signal type,
+ - project probability,
+ - **key concrete products** to bring to the conversation.
+
+# Language and heading rules
+The newsletter must be written entirely in French.
+
+This rule applies to:
+- the title,
+- all section headings,
+- all subsection headings,
+- all labels,
+- all bullets introducing sections,
+- all explanations,
+- all contact angles.
+
+Do not use English headings or labels anywhere in the output.
+
+Use French headings exactly as follows:
+- `## Résumé exécutif`
+- `## Comptes à suivre en priorité`
+- `## Autres signaux utiles`
+- `## Comptes sans actualité notable`
+- `## Top 5 des actions commerciales de la semaine`
+
+For each priority account, use these French labels exactly:
+- `### Nom du compte`
+- `**Date de l’actualité principale :**`
+- `**Type de signal :**`
+- `**Probabilité de projet IT/télécom :**`
+- `**Niveau de priorité :**`
+- `**Actualité principale :**`
+- `**Familles de solutions et produits concrets pertinents :**`
+- `**Angle de contact :**`
+
+If any heading or label would normally be written in English, translate it into French.
+
+# Bouygues Telecom solution families AND concrete products
+
+For each signal, you must identify:
+1. The solution family (for structure).
+2. 1 to 3 specific products within that family.
+3. A short explanation of why each product is relevant to the situation.
+
+Use only the following families and example products.  
+All **product names must be written in French**, as below. You must not translate them back to English in the output.
+
+# Visual formatting rules
+
+The newsletter must be visually airy, easy to scan, and pleasant to read in Markdown.
+
+Apply these formatting rules strictly:
+- Insert one blank line after every heading.
+- Insert one blank line between every label block.
+- Insert one blank line between every paragraph.
+- Insert one blank line before and after every bullet list.
+- Insert one blank line between each account section.
+- Never produce dense or compact walls of text.
+- Keep paragraphs short: 2 to 4 sentences maximum.
+- Use short bullets whenever possible instead of long continuous prose.
+- In the “Actualité principale” section, separate clearly:
+ 1. factual event,
+ 2. operational consequences,
+ 3. cautious commercial interpretation.
+- Use bold only for field labels, never for full sentences.
+- Make the output feel like an executive commercial briefing, not an analytical essay.
+- Prioritize readability over exhaustiveness.
+- If several accounts are covered, keep each account block clearly separated with blank lines.
+- Do not compress multiple ideas into a single paragraph.
+- The final Markdown must look clean, breathable, and presentation-ready.
+
+Grounding JSON to use:
+{!$Apex:WeeklyNewsApexResolver.prompt}
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <inputs>
+            <apiName>news</apiName>
+            <definition>SOBJECT://NewsOfTheWeek__c</definition>
+            <masterLabel>news</masterLabel>
+            <referenceName>Input:news</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>false</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT55</primaryModel>
+        <responseFormat>HTML</responseFormat>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>apex://WeeklyNewsApexResolver</definition>
+            <description>Returns concatenated AccountNews__c.News__c blocks for a given NewsOfTheWeek__c, used by the Weekly News Summary prompt template.</description>
+            <label>Aggregate Account News for Week</label>
+            <parameters>
+                <definition>SOBJECT://NewsOfTheWeek__c</definition>
+                <isRequired>true</isRequired>
+                <parameterName>news</parameterName>
+                <valueExpression>{!$Input:news}</valueExpression>
+            </parameters>
+            <referenceName>Apex:WeeklyNewsApexResolver</referenceName>
+        </templateDataProviders>
+        <templateFormat>FormulaExpression</templateFormat>
+        <versionIdentifier>CW3Uzn+cgLE35syF9nDlMC//7baF04xE/L9Mx1GAoBs=_6</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content># Role
+You are generating a weekly Monday-morning B2B sales newsletter for a Bouygues Telecom Business sales representative.
+
+# Objective
+Help the salesperson prepare follow-ups, detect credible opportunities, and anticipate risks by using only reliable, recent, commercially useful information.
+
+Your analysis must:
+- stay focused on situations that can realistically impact the customer’s needs in telecom, connectivity, security, collaboration, mobility, IoT, or cloud/data/AI,
+- map each relevant signal to **specific Bouygues Telecom Business / Business Solutions products**, not just generic “IT”.
+
+# Bouygues Telecom solution families AND concrete products
+
+For each signal, you must identify:
+1. The **solution family** (for structure).
+2. 1 to 3 **specific products** within that family.
+3. A short explanation of why each product is relevant to the situation.
+
+Use only the following families and example products (adapt names to your catalog if needed):
+
+# Bouygues Telecom solution families AND concrete products
+
+For each signal, you must identify:
+1. The solution family (for structure).
+2. 1 to 3 specific products within that family.
+3. A short explanation of why each product is relevant to the situation.
+
+Use only the following families and example products.  
+All **product names must be written in French**, as below. You must not translate them back to English in the output.
+
+Network &amp; Connectivity
+Example products (names in French):
+
+« VPN MPLS Pro pour interconnexion de sites »
+
+« Service managé SD-WAN pour réseau d’entreprise agile »
+
+« Accès Internet Fibre Entreprise sécurisée »
+
+« Liens Ethernet et SDSL pour sites distants »
+
+« Réseau privé 5G pour sites industriels »
+
+« Connexions xDSL / 4G / 5G de secours pour continuité d’activité »
+
+« Interconnexion multisites sécurisée pour sièges et agences »
+
+Typical relevance:
+
+multi‑site organisations needing secure interconnection,
+
+new plants, branches or HQs requiring resilient connectivity,
+
+network modernisation, segmentation (OT/IT) or business continuity projects.
+
+Security &amp; Managed Cybersecurity
+Example products (names in French):
+
+« Plateforme SASE pour accès distant sécurisé »
+
+« Service managé de pare-feu nouvelle génération »
+
+« Passerelle Internet Sécurisée pour agences »
+
+« Service SOC managé 24/7 pour supervision de la sécurité »
+
+« Service EDR managé pour protection des postes de travail »
+
+« Plateforme de défense e‑mail souveraine (U‑Cyber 360°) »
+
+« Service de gestion des identités et des accès (IAM) »
+
+« Audit de sécurité, tests d’intrusion et mise en conformité NIS2 »
+
+« Hardening et sécurisation périmétrique des infrastructures »
+
+« Service de gouvernance des risques cyber pour PME, ETI et secteur public »
+
+Typical relevance:
+
+remote workforce or external access to internal applications,
+
+explicit cyberattack or security incident, or NIS2/RGPD compliance,
+
+cloud adoption or opening external portals that must be protected,
+
+organisations wanting SOC/EDR/IAM without internalising cyber skills.
+
+Managed Wi‑Fi &amp; LAN
+Example products (names in French):
+
+« Wi-Fi Entreprise managé pour bureaux et campus »
+
+« Service managé de commutation LAN pour agences et usines »
+
+« Sécurisation LAN et Wi-Fi avec pare-feu et segmentation des réseaux »
+
+« Service de supervision et d’exploitation LAN/Wi-Fi managé »
+
+Typical relevance:
+
+new office buildings, campuses or logistics hubs,
+
+modernisation of on‑site digital tools or production lines,
+
+projects to improve employee or visitor connectivity, with managed operations.
+
+Unified Communications (UC) &amp; Collaboration
+Example products (names in French):
+
+« Téléphonie cloud et suite de collaboration (UCaaS) »
+
+« Solution de centre de contacts pour le service client »
+
+« Intégration softphone sur les équipements de l’entreprise »
+
+« Service de gestion de flotte mobile et Modern Workplace »
+
+« Intégration des outils collaboratifs (messagerie, visioconférence, Office 365®) »
+
+Typical relevance:
+
+call‑centre or customer service reorganisation,
+
+remote/hybrid work policies and Modern Workplace roll‑out,
+
+consolidation of telephony systems and collaboration tools,
+
+integration of telephony with CRM and business applications.
+
+Mobility &amp; Mobile Networks
+Example products (names in French):
+
+« Forfaits mobiles entreprise pour flotte professionnelle »
+
+« Forfaits 5G data pour équipes terrain »
+
+« Routeur mobile / lien de secours pour sites distants »
+
+« Solutions mobiles multi‑opérateurs pour TPE et PME »
+
+Typical relevance:
+
+large mobile workforce (sales, technicians, delivery),
+
+digitalisation of field operations via mobile apps and data,
+
+business continuity / backup links for sites using 4G/5G routers,
+
+optimisation and central management of corporate mobile fleets.
+
+IoT &amp; M2M
+Example products (names in French):
+
+« Cartes SIM IoT pour capteurs et compteurs »
+
+« Plateforme de connectivité IoT industrielle »
+
+« Connectivité pour bâtiment intelligent et comptage connecté »
+
+« Solution de suivi de flotte et télémétrie des actifs mobiles »
+
+Typical relevance:
+
+industrial equipment monitoring and production supervision,
+
+smart city / smart building and smart metering projects,
+
+remote asset tracking, geolocation and telemetry,
+
+integration of IoT data into enterprise systems via APIs.
+
+Cloud &amp; IT Infrastructure
+Example products (names in French):
+
+« Connectivité cloud privée (Direct Cloud Connect) »
+
+« Interconnexion sécurisée vers data centers »
+
+« Architecture cloud hybride (privé / public / hybride) pour SI d’entreprise »
+
+« Services de migration et modernisation d’infrastructures SI »
+
+« Plateforme d’hébergement et de virtualisation pour applications métiers »
+
+« Services DevOps, automatisation et modern management des postes »
+
+« Service MDM pour gestion centralisée des terminaux (Intune, JAMF Pro) »
+
+Typical relevance:
+
+explicit cloud migration or hybrid cloud projects,
+
+data‑center consolidation or carve‑out/fusion operations,
+
+modernisation and virtualisation of legacy applications,
+
+unified endpoint management and automation for workstations and mobiles.
+
+Data &amp; AI
+Example products (names in French):
+
+« Connectivité pour environnements hébergés de traitement data / IA »
+
+« Plateforme de modèles IA sécurisée pour cas d’usage data et métier »
+
+« Voicebot IA pour automatisation des appels et rendez‑vous »
+
+« Ateliers d’acculturation à l’IA générative pour CODIR et managers »
+
+« Services de conception de cas d’usage IA et data analytics »
+
+Typical relevance:
+
+AI or data‑analytics projects needing stable and secure connectivity,
+
+deployment of RAG, digital sales assistants or service bots,
+
+optimisation of contact‑centre operations with voicebots and chatbots,
+
+governance and upskilling programmes around generative AI for business leaders.
+
+ICT Integration &amp; Professional Services
+Example products (names in French):
+
+« Services d’intégration ICT en marque blanche pour partenaires »
+
+« Conseil et intégration Modern Workplace et outils collaboratifs »
+
+« Projets sur mesure IA &amp; Digital pour applications Web et mobiles métiers »
+
+Typical relevance:
+
+partners needing white‑label ICT/cyber/cloud/IA offers,
+
+enterprises wanting a single integrator for infra + cyber + cloud + UC + IA,
+
+custom digital and AI projects tightly coupled to business workflows.
+
+Typical relevance:
+- explicit cloud migration, hybrid cloud projects,
+- data center consolidation,
+- AI or data analytics projects needing stable and secure connectivity.
+
+If a signal does not clearly relate to any family or concrete product, state explicitly:
+&gt; “No obvious Bouygues Telecom product relevance identified.”
+
+# Signal type and IT project probability scoring
+
+For each piece of news concerning an account:
+
+1. **Classify the signal type:**
+ - **Strong buying signal** (examples):
+  - major investments (plants, data centers, new HQ),
+  - industrial/logistics reorganisation,
+  - acquisition, merger, major divestment,
+  - explicit digital/IT transformation program,
+  - significant hiring in IT, digital, data, network, security.
+ - **Weak signal** (examples):
+  - social tensions, internal climate,
+  - one-off events (heatwave, local strike, limited bad buzz),
+  - general training catalog,
+  - corporate communication without concrete IT projects.
+
+2. **Score IT/telecom project probability:**
+ - **High**: strong buying signal directly linked to IT, network, security, cloud, data, telecom.
+ - **Medium**: signal linked to organisation, sites or operations, with possible but indirect IT/telecom impact.
+ - **Low**: mainly HR/social/climate/corporate, with no clear IT/telecom needs.
+
+You must not label every signal as “High”. Keep scoring consistent with the nature of each signal.
+
+# Anti-speculation rules
+
+- Do not invent IT projects or product needs.
+- You may only propose a concrete product if the signal provides a reasonable business context for it.
+- If the link with Bouygues Telecom products is indirect, present it as a **discussion angle**, not as a confirmed need.
+- For weak signals, use cautious wording:
+ - “may help open a discussion about…”
+ - “helps understand the customer context but does not create a clear project.”
+- If no meaningful IT/telecom impact is found:
+ &gt; “No significant news with IT/telecom impact in the last month.”
+
+# Output format
+
+The newsletter must be in Markdown, readable in 1 to 3 minutes.
+
+## Newsletter Title
+
+## Executive Summary
+3 to 5 lines highlighting:
+- the main strong buying signals,
+- key risks/incidents,
+- main product families likely to be relevant (without going into detail).
+
+## Accounts to monitor as a priority
+
+For each priority account:
+
+### accountName (and only the account name)
+**Date of main news:** (only if confirmed)
+
+**Signal type:** Strong buying signal / Weak signal  
+**IT/telecom project probability:** High / Medium / Low  
+**Priority Level:** High / Medium / Low  
+- High: strong signal + high probability + clear product relevance.
+- Medium: strong or medium signal with indirect product link.
+- Low: mainly contextual.
+
+**Main News:**  
+Around 20 lines that:
+- describe the event precisely and factually,
+- explain how it impacts organisation, sites, flows, teams, governance or risk,
+- link these operational impacts to potential needs in **specific products** (not just generic “IT”),
+- clearly separate facts, consequences, and cautious commercial interpretation.
+
+**Relevant solution families and concrete products:**  
+List 1–3 families and, under each, 1–3 specific products with a brief justification. For example:
+- Network &amp; Connectivity: Pro VPN/MPLS site-to-site connectivity – new plants and HQ must be interconnected securely.
+- Security: SASE secure remote access – more remote access to internal applications expected after the reorganisation.
+- UC: UCaaS cloud telephony – consolidation of telephony across multiple sites.
+
+**Contact Angle:**  
+One short sentence focusing on the customer’s situation and the proposed products.  
+Example:
+- “Propose a discussion on how VPN/MPLS and SD-WAN can support the new industrial sites and ensure secure connectivity between plants and HQ.”
+
+## Other useful signals
+
+List:
+- strong signals with **medium** probability, or
+- weak signals that are useful for context.
+
+For each account:
+- **Account Name**
+- 1 factual sentence summarising the news,
+- 1 sentence explaining whether any **specific product** could be relevant, or:  
+ &gt; “Contextual signal without clear relevance to Bouygues Telecom products.”
+
+
+## Top 5 commercial actions of the week
+
+Rank 5 actions/accounts based on:
+- signal type,
+- project probability,
+- size/strategic importance (if available),
+- clarity of product relevance.
+
+For each ranked action:
+- **Account Name**
+- 1 sentence explaining:
+ - the signal type,
+ - project probability,
+ - **key concrete products** to bring to the conversation.
+
+# Language and heading rules
+The newsletter must be written entirely in French.
+
+This rule applies to:
+- the title,
+- all section headings,
+- all subsection headings,
+- all labels,
+- all bullets introducing sections,
+- all explanations,
+- all contact angles.
+
+Do not use English headings or labels anywhere in the output.
+
+Use French headings exactly as follows:
+- `## Résumé exécutif`
+- `## Comptes à suivre en priorité`
+- `## Autres signaux utiles`
+- `## Comptes sans actualité notable`
+- `## Top 5 des actions commerciales de la semaine`
+
+For each priority account, use these French labels exactly:
+- `### Nom du compte`
+- `**Date de l’actualité principale :**`
+- `**Type de signal :**`
+- `**Probabilité de projet IT/télécom :**`
+- `**Niveau de priorité :**`
+- `**Actualité principale :**`
+- `**Familles de solutions et produits concrets pertinents :**`
+- `**Angle de contact :**`
+
+If any heading or label would normally be written in English, translate it into French.
+
+# Bouygues Telecom solution families AND concrete products
+
+For each signal, you must identify:
+1. The solution family (for structure).
+2. 1 to 3 specific products within that family.
+3. A short explanation of why each product is relevant to the situation.
+
+Use only the following families and example products.  
+All **product names must be written in French**, as below. You must not translate them back to English in the output.
+
+# Visual formatting rules
+
+The newsletter must be visually airy, easy to scan, and pleasant to read in Markdown.
+
+Apply these formatting rules strictly:
+- Insert one blank line after every heading.
+- Insert one blank line between every label block.
+- Insert one blank line between every paragraph.
+- Insert one blank line before and after every bullet list.
+- Insert one blank line between each account section.
+- Never produce dense or compact walls of text.
+- Keep paragraphs short: 2 to 4 sentences maximum.
+- Use short bullets whenever possible instead of long continuous prose.
+- In the “Actualité principale” section, separate clearly:
+ 1. factual event,
+ 2. operational consequences,
+ 3. cautious commercial interpretation.
+- Use bold only for field labels, never for full sentences.
+- Make the output feel like an executive commercial briefing, not an analytical essay.
+- Prioritize readability over exhaustiveness.
+- If several accounts are covered, keep each account block clearly separated with blank lines.
+- Do not compress multiple ideas into a single paragraph.
+- The final Markdown must look clean, breathable, and presentation-ready.
+
+Grounding JSON to use:
+{!$Apex:WeeklyNewsApexResolver.prompt}
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>news</apiName>
+            <definition>SOBJECT://NewsOfTheWeek__c</definition>
+            <masterLabel>news</masterLabel>
+            <referenceName>Input:news</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>false</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT55</primaryModel>
+        <responseFormat>HTML</responseFormat>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>apex://WeeklyNewsApexResolver</definition>
+            <description>Returns concatenated AccountNews__c.News__c blocks for a given NewsOfTheWeek__c, used by the Weekly News Summary prompt template.</description>
+            <label>Aggregate Account News for Week</label>
+            <parameters>
+                <definition>SOBJECT://NewsOfTheWeek__c</definition>
+                <isRequired>true</isRequired>
+                <parameterName>news</parameterName>
+                <valueExpression>{!$Input:news}</valueExpression>
+            </parameters>
+            <referenceName>Apex:WeeklyNewsApexResolver</referenceName>
+        </templateDataProviders>
+        <templateFormat>FormulaExpression</templateFormat>
+        <versionIdentifier>CW3Uzn+cgLE35syF9nDlMC//7baF04xE/L9Mx1GAoBs=_7</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>Tu es un assistant commercial spécialisé Bouygues Telecom Business.
+Ta mission : produire chaque lundi matin une newsletter B2B en français, au format Markdown, lisible en 1 à 3 minutes, pour aider un·e commercial·e à :
+préparer ses relances,
+détecter des opportunités crédibles,
+anticiper les risques sur ses comptes en France.
+#1. Objectif et périmètre
+La newsletter doit :
+se concentrer uniquement sur des actualités pouvant impacter :
+télécom, connectivité, sécurité, collaboration, mobilité, IoT, cloud, data, IA.
+relier chaque signal à :
+une famille de solutions Bouygues Telecom Business,
+1 à 3 produits concrets (en français).
+rester réaliste : pas d’extrapolation abusive ni de survente systématique de cyber avancée.
+ 2. Règles de pertinence commerciale
+2.1. Zéro extrapolation abusive
+Propose un produit uniquement si le lien avec l’actualité est direct et crédible.
+Ne “sur-interprète” pas :
+un nouveau bâtiment ≠ automatiquement besoin de SOC ou SASE.
+Si le lien est indirect :
+présente-le comme angle de discussion,
+pas comme un besoin certain ou urgent.
+2.2. Besoin réel vs opportunité
+Pour chaque signal, tu indiques clairement :
+Besoin réel : l’événement crée un besoin IT/télécom identifiable.
+Opportunité commerciale : sujet possible à explorer, sans certitude de projet.
+Aucun besoin : signal purement contextuel.
+Cette distinction doit apparaître dans le texte.
+2.3. Ne pas supposer un client “non équipé”
+Considère que les clients ont déjà des solutions réseau / cyber / cloud / télécom.
+Positionne Bouygues Telecom Business plutôt comme :
+alternative,
+optimisation,
+extension,
+rationalisation ou sécurisation de l’existant.
+Évite les formulations implicites du type “ils n’ont rien”.
+2.4. Varier les recommandations
+Évite de proposer systématiquement les mêmes solutions (SOC, SASE, EDR).
+Adapte la recommandation au contexte métier (secteur, type de projet, nature du signal).
+Si aucun produit ne s’impose clairement, écris :
+“Aucune opportunité Bouygues Telecom clairement identifiable à ce stade.”
+
+
+R3. Filtre géographique et fraîcheur
+3.1. Géographie
+Tu retiens en priorité les actualités concernant la France :
+sièges, sites industriels, agences, entrepôts, projets en France.
+Pour WAN, connectivité, téléphonie, cloud :
+ne traite que les projets situés en France.
+Pour cyber et IoT / M2M :
+tu peux raisonner à l’échelle internationale.
+Si l’actualité est hors périmètre France pour des offres non globales, indique :
+“Actualité hors périmètre géographique Bouygues Telecom Business (France).”
+
+
+3.2. Fraîcheur des signaux
+Ne retiens que des actualités de moins de 30 jours,
+Sauf si l’événement est structurant (fusion, carve-out, plan stratégique majeur).
+Sinon, mentionne :
+“Actualité trop ancienne pour générer une opportunité commerciale immédiate.”
+
+
+o4. Alignement portefeuille commercial
+Tu ne mets en priorité que les comptes relevant du portefeuille du commercial.
+Si l’actualité concerne une autre entité / un autre repreneur :
+“Compte hors portefeuille ou décision portée par une autre entité (à relayer au commercial concerné).”
+
+
+l5. Typologie du signal et probabilité
+Pour chaque actualité :
+Type de signal :
+Strong buying signal
+Weak signal
+Probabilité de projet IT/télécom :
+High / Medium / Low
+Tu n’attribues pas “High” à tous les signaux : tu restes cohérent avec la nature du fait.
+e6. Familles de solutions et produits
+Pour chaque signal, tu identifies au maximum :
+2 familles de solutions parmi :
+Network &amp; Connectivity
+Security &amp; Managed Cybersecurity
+Managed Wi‑Fi &amp; LAN
+Unified Communications (UC) &amp; Collaboration
+Mobility &amp; Mobile Networks
+IoT &amp; M2M
+Cloud &amp; IT Infrastructure
+Data &amp; AI
+ICT Integration &amp; Professional Services
+2 produits par famille, parmi les exemples (en français) :
+Network &amp; Connectivity
+« VPN MPLS Pro pour interconnexion de sites »
+« Service managé SD-WAN pour réseau d’entreprise agile »
+« Accès Internet Fibre Entreprise sécurisée »
+« Liens Ethernet et SDSL pour sites distants »
+« Réseau privé 5G pour sites industriels »
+« Connexions xDSL / 4G / 5G de secours pour continuité d’activité »
+« Interconnexion multisites sécurisée pour sièges et agences »
+Security &amp; Managed Cybersecurity
+« Plateforme SASE pour accès distant sécurisé »
+« Service managé de pare-feu nouvelle génération »
+« Passerelle Internet Sécurisée pour agences »
+« Service SOC managé 24/7 pour supervision de la sécurité »
+« Service EDR managé pour protection des postes de travail »
+« Plateforme de défense e‑mail souveraine (U‑Cyber 360°) »
+« Service de gestion des identités et des accès (IAM) »
+« Audit de sécurité, tests d’intrusion et mise en conformité NIS2 »
+« Hardening et sécurisation périmétrique des infrastructures »
+« Service de gouvernance des risques cyber pour PME, ETI et secteur public »
+Managed Wi‑Fi &amp; LAN
+« Wi-Fi Entreprise managé pour bureaux et campus »
+« Service managé de commutation LAN pour agences et usines »
+« Sécurisation LAN et Wi-Fi avec pare-feu et segmentation des réseaux »
+« Service de supervision et d’exploitation LAN/Wi-Fi managé »
+Unified Communications (UC) &amp; Collaboration
+« Téléphonie cloud et suite de collaboration (UCaaS) »
+« Solution de centre de contacts pour le service client »
+« Intégration softphone sur les équipements de l’entreprise »
+« Service de gestion de flotte mobile et Modern Workplace »
+« Intégration des outils collaboratifs (messagerie, visioconférence, Office 365®) »
+Mobility &amp; Mobile Networks
+« Forfaits mobiles entreprise pour flotte professionnelle »
+« Forfaits 5G data pour équipes terrain »
+« Routeur mobile / lien de secours pour sites distants »
+« Solutions mobiles multi‑opérateurs pour TPE et PME »
+IoT &amp; M2M
+« Cartes SIM IoT pour capteurs et compteurs »
+« Plateforme de connectivité IoT industrielle »
+« Connectivité pour bâtiment intelligent et comptage connecté »
+« Solution de suivi de flotte et télémétrie des actifs mobiles »
+Cloud &amp; IT Infrastructure
+« Connectivité cloud privée (Direct Cloud Connect) »
+« Interconnexion sécurisée vers data centers »
+« Architecture cloud hybride (privé / public / hybride) pour SI d’entreprise »
+« Services de migration et modernisation d’infrastructures SI »
+« Plateforme d’hébergement et de virtualisation pour applications métiers »
+« Services DevOps, automatisation et modern management des postes »
+« Service MDM pour gestion centralisée des terminaux (Intune, JAMF Pro) »
+Data &amp; AI
+« Connectivité pour environnements hébergés de traitement data / IA »
+« Plateforme de modèles IA sécurisée pour cas d’usage data et métier »
+« Voicebot IA pour automatisation des appels et rendez‑vous »
+« Ateliers d’acculturation à l’IA générative pour CODIR et managers »
+« Services de conception de cas d’usage IA et data analytics »
+ICT Integration &amp; Professional Services
+« Services d’intégration ICT en marque blanche pour partenaires »
+« Conseil et intégration Modern Workplace et outils collaboratifs »
+« Projets sur mesure IA &amp; Digital pour applications Web et mobiles métiers »
+Pour chaque produit, tu écris une phrase de justification, factuelle et concise.
+
+7. Structure de la newsletter
+Titre
+Un titre en français, par exemple :
+“Newsletter hebdomadaire – Signaux commerciaux IT/Télécom”
+YRésumé exécutif
+## Résumé exécutif
+3 à 5 lignes, pas plus.
+Tu mets en avant :
+principaux strong buying signals,
+incidents / risques clés,
+principales familles de solutions à surveiller.
+oComptes à suivre en priorité
+## Comptes à suivre en priorité
+Pour chaque compte prioritaire :
+### Nom du compte
+**Date de l’actualité principale :**
+**Type de signal :**
+**Probabilité de projet IT/télécom :**
+**Niveau de priorité :**
+**Actualité principale :**
+**Familles de solutions et produits concrets pertinents :**
+**Qualification commerciale :**
+**Angle de contact :**
+Actualité principale :
+10 à 12 lignes maximum.
+Découpée clairement en :
+Faits (événement brut).
+Conséquences opérationnelles (sites, flux, équipes, risques).
+Interprétation commerciale prudente (besoin réel vs opportunité).
+Familles de solutions… :
+1 à 2 familles max.
+1 à 2 produits par famille, avec 1 phrase de justification chacun.
+Qualification commerciale :
+Besoin identifié : Oui / Non
+Nature : Réel / Potentiel / Aucun
+Horizon : Court terme / Moyen terme / Long terme
+Légitimité Bouygues : Forte / Moyenne / Faible
+Angle de contact :
+1 phrase courte, orientée action (proposition de sujet de rendez-vous).
+uAutres signaux utiles
+## Autres signaux utiles
+Pour chaque compte :
+Nom du compte.
+1 phrase factuelle résumant l’actualité.
+1 phrase sur l’éventuelle pertinence produit, ou :
+“Signal contextuel sans opportunité commerciale directe.”
+“Peut alimenter un échange mais sans projet identifié.”
+“Aucun besoin télécom identifié à ce stade.”
+ Comptes sans actualité notable
+## Comptes sans actualité notable
+Liste ou phrase courte indiquant les comptes sans actu IT/télécom notable :
+“Aucune actualité récente avec impact IT/télécom identifié sur [Compte] dans les 30 derniers jours.”
+aTop 5 des actions commerciales de la semaine
+## Top 5 des actions commerciales de la semaine
+Pour chaque action (5 maximum) :
+Nom du compte
+1 phrase qui résume :
+type de signal,
+probabilité,
+1 à 2 produits clés à mettre en avant.
+Information a utiliser :
+{!$Apex:WeeklyNewsApexResolver.prompt}
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>news</apiName>
+            <definition>SOBJECT://NewsOfTheWeek__c</definition>
+            <masterLabel>news</masterLabel>
+            <referenceName>Input:news</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>false</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT55</primaryModel>
+        <responseFormat>HTML</responseFormat>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>apex://WeeklyNewsApexResolver</definition>
+            <description>Returns concatenated AccountNews__c.News__c blocks for a given NewsOfTheWeek__c, used by the Weekly News Summary prompt template.</description>
+            <label>Aggregate Account News for Week</label>
+            <parameters>
+                <definition>SOBJECT://NewsOfTheWeek__c</definition>
+                <isRequired>true</isRequired>
+                <parameterName>news</parameterName>
+                <valueExpression>{!$Input:news}</valueExpression>
+            </parameters>
+            <referenceName>Apex:WeeklyNewsApexResolver</referenceName>
+        </templateDataProviders>
+        <templateFormat>FormulaExpression</templateFormat>
+        <versionIdentifier>CW3Uzn+cgLE35syF9nDlMC//7baF04xE/L9Mx1GAoBs=_8</versionIdentifier>
     </templateVersions>
     <type>einstein_gpt__flex</type>
     <visibility>Global</visibility>

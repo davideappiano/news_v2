@@ -146,6 +146,15 @@
         <sortField>NAME</sortField>
         <sortOrder>Asc</sortOrder>
     </relatedLists>
+    <relatedLists>
+        <fields>NAME</fields>
+        <fields>Run_Date__c</fields>
+        <fields>Status__c</fields>
+        <fields>Total_Accounts__c</fields>
+        <relatedList>NewsRun__c.News_Of_The_Week__c</relatedList>
+        <sortField>Run_Date__c</sortField>
+        <sortOrder>Desc</sortOrder>
+    </relatedLists>
     <showEmailCheckbox>false</showEmailCheckbox>
     <showHighlightsPanel>false</showHighlightsPanel>
     <showInteractionLogPanel>false</showInteractionLogPanel>
