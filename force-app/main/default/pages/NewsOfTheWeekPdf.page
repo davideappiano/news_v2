@@ -1,4 +1,4 @@
-<apex:page standardController="NewsOfTheWeek__c"
+<apex:page standardController="NewsRun__c"
            renderAs="pdf"
            applyHtmlTag="true"
            applyBodyTag="true"
@@ -36,14 +36,14 @@
         </style>
     </head>
     <body>
-        <h1 class="docTitle">{!NewsOfTheWeek__c.Name}</h1>
+        <h1 class="docTitle">{!NewsRun__c.Name}</h1>
         <div class="docMeta">
             <apex:outputText value="Run date: {0,date,MMMM d', 'yyyy}">
-                <apex:param value="{!NewsOfTheWeek__c.Run_Date__c}" />
+                <apex:param value="{!NewsRun__c.Run_Date__c}" />
             </apex:outputText>
         </div>
         <div class="content">
-            <apex:outputText value="{!NewsOfTheWeek__c.News_Head__c}" escape="false" />
+            <apex:outputText value="{!NewsRun__c.News_Head__c}" escape="false" />
         </div>
     </body>
 </apex:page>

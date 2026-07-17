@@ -201,17 +201,17 @@ public with sharing class NewsOfTheWeekController {
     @AuraEnabled
     public static PdfResult generatePdf(Id recordId) {
         if (recordId == null) {
-            throw new AuraHandledException('A NewsOfTheWeek record id is required.');
+            throw new AuraHandledException('A News Run record id is required.');
         }
 
-        NewsOfTheWeek__c notw = [
+        NewsRun__c run = [
             SELECT Id, Name, News_Head__c
-            FROM NewsOfTheWeek__c
+            FROM NewsRun__c
             WHERE Id = :recordId
             LIMIT 1
         ];
 
-        if (String.isBlank(notw.News_Head__c)) {
+        if (String.isBlank(run.News_Head__c)) {
             throw new AuraHandledException('News Head is empty — nothing to render.');
         }
 
@@ -227,7 +227,7 @@ public with sharing class NewsOfTheWeekController {
             throw new AuraHandledException('Failed to render PDF: ' + e.getMessage());
         }
 
-        String fileName = buildPdfFileName(notw);
+        String fileName = buildPdfFileName(run.Name);
 
         ContentVersion cv = new ContentVersion(
             Title = fileName,
@@ -263,12 +263,12 @@ public with sharing class NewsOfTheWeekController {
     @AuraEnabled
     public static String sendToRep(Id recordId) {
         if (recordId == null) {
-            throw new AuraHandledException('A NewsOfTheWeek record id is required.');
+            throw new AuraHandledException('A News Run record id is required.');
         }
 
-        NewsOfTheWeek__c notw = [
+        NewsRun__c notw = [
             SELECT Id, Name, News_Head__c, Salesperson__c, Salesperson__r.Email, Salesperson__r.Name
-            FROM NewsOfTheWeek__c
+            FROM NewsRun__c
             WHERE Id = :recordId
             LIMIT 1
         ];
@@ -336,8 +336,8 @@ public with sharing class NewsOfTheWeekController {
         return notw.Salesperson__r.Email;
     }
 
-    private static String buildPdfFileName(NewsOfTheWeek__c notw) {
-        String base = String.isBlank(notw.Name) ? 'News Of The Week' : notw.Name;
+    private static String buildPdfFileName(String recordName) {
+        String base = String.isBlank(recordName) ? 'News Of The Week' : recordName;
         String stamp = Datetime.now().format('yyyy-MM-dd_HHmm');
         return base + ' - ' + stamp;
     }
