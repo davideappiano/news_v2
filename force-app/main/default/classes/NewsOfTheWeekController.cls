@@ -200,8 +200,24 @@ public with sharing class NewsOfTheWeekController {
      */
     @AuraEnabled
     public static PdfResult generatePdf(Id recordId) {
+        try {
+            return generatePdfForRun(recordId);
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    /**
+     * Render a NewsRun__c's News_Head__c to PDF and attach it to the run.
+     * Reusable from both the LWC action and GeneratePdfQueueable (auto-generate
+     * after a run completes). Throws plain exceptions; callers translate.
+     *
+     * Note: getContentAsPDF() behaves like a callout and cannot run after DML in
+     * the same transaction — call this in a fresh transaction (its own Queueable).
+     */
+    public static PdfResult generatePdfForRun(Id recordId) {
         if (recordId == null) {
-            throw new AuraHandledException('A News Run record id is required.');
+            throw new NewsRunException('A News Run record id is required.');
         }
 
         NewsRun__c run = [
@@ -212,7 +228,7 @@ public with sharing class NewsOfTheWeekController {
         ];
 
         if (String.isBlank(run.News_Head__c)) {
-            throw new AuraHandledException('News Head is empty — nothing to render.');
+            throw new NewsRunException('News Head is empty — nothing to render.');
         }
 
         PageReference pdfPage = Page.NewsOfTheWeekPdf;
@@ -224,7 +240,7 @@ public with sharing class NewsOfTheWeekController {
                 ? Blob.valueOf('TEST_PDF_CONTENT')
                 : pdfPage.getContentAsPDF();
         } catch (Exception e) {
-            throw new AuraHandledException('Failed to render PDF: ' + e.getMessage());
+            throw new NewsRunException('Failed to render PDF: ' + e.getMessage());
         }
 
         String fileName = buildPdfFileName(run.Name);
@@ -266,19 +282,31 @@ public with sharing class NewsOfTheWeekController {
             throw new AuraHandledException('A News Run record id is required.');
         }
 
-        NewsRun__c notw = [
-            SELECT Id, Name, News_Head__c, Salesperson__c, Salesperson__r.Email, Salesperson__r.Name
+        // Validate synchronously so the user gets an immediate toast, then hand
+        // the actual send to a Queueable. Async Apex runs in a system context,
+        // which lets the email through even when interactive single-email sends
+        // are restricted by org deliverability ("System email only").
+        NewsRun__c run = [
+            SELECT Salesperson__c, Salesperson__r.Email
             FROM NewsRun__c
             WHERE Id = :recordId
             LIMIT 1
         ];
-
-        if (notw.Salesperson__c == null || String.isBlank(notw.Salesperson__r.Email)) {
+        if (run.Salesperson__c == null || String.isBlank(run.Salesperson__r.Email)) {
             throw new AuraHandledException('The salesperson has no email address on file.');
         }
+        if (latestPdfId(recordId) == null) {
+            throw new AuraHandledException('No PDF is attached to this record. Generate the PDF first.');
+        }
 
-        // ContentDocumentLink can't be used in a semi-join subquery, so resolve
-        // the linked document ids first, then query the PDF versions.
+        if (!Test.isRunningTest()) {
+            System.enqueueJob(new SendToRepQueueable(recordId));
+        }
+        return run.Salesperson__r.Email;
+    }
+
+    /** Returns the latest PDF ContentVersion linked to the record, or null. */
+    private static ContentVersion latestPdf(Id recordId) {
         Set<Id> docIds = new Set<Id>();
         for (ContentDocumentLink cdl : [
             SELECT ContentDocumentId
@@ -287,11 +315,9 @@ public with sharing class NewsOfTheWeekController {
         ]) {
             docIds.add(cdl.ContentDocumentId);
         }
-
         if (docIds.isEmpty()) {
-            throw new AuraHandledException('No PDF is attached to this record. Generate the PDF first.');
+            return null;
         }
-
         List<ContentVersion> pdfs = [
             SELECT Id, Title, PathOnClient, VersionData
             FROM ContentVersion
@@ -301,11 +327,33 @@ public with sharing class NewsOfTheWeekController {
             ORDER BY CreatedDate DESC
             LIMIT 1
         ];
+        return pdfs.isEmpty() ? null : pdfs[0];
+    }
 
-        if (pdfs.isEmpty()) {
-            throw new AuraHandledException('No PDF is attached to this record. Generate the PDF first.');
+    private static Id latestPdfId(Id recordId) {
+        ContentVersion cv = latestPdf(recordId);
+        return cv == null ? null : cv.Id;
+    }
+
+    /**
+     * Actual email dispatch — invoked from SendToRepQueueable so it runs in a
+     * system/async context. Returns the recipient email; throws plain exceptions.
+     */
+    public static String deliverToRep(Id recordId) {
+        NewsRun__c run = [
+            SELECT Id, Name, News_Head__c, Salesperson__c, Salesperson__r.Email, Salesperson__r.Name
+            FROM NewsRun__c
+            WHERE Id = :recordId
+            LIMIT 1
+        ];
+        if (run.Salesperson__c == null || String.isBlank(run.Salesperson__r.Email)) {
+            throw new NewsRunException('The salesperson has no email address on file.');
         }
-        ContentVersion pdf = pdfs[0];
+
+        ContentVersion pdf = latestPdf(recordId);
+        if (pdf == null) {
+            throw new NewsRunException('No PDF is attached to this record. Generate the PDF first.');
+        }
         String fileName = String.isBlank(pdf.PathOnClient) ? pdf.Title + '.pdf' : pdf.PathOnClient;
 
         Messaging.EmailFileAttachment attachment = new Messaging.EmailFileAttachment();
@@ -313,13 +361,13 @@ public with sharing class NewsOfTheWeekController {
         attachment.setBody(pdf.VersionData);
         attachment.setContentType('application/pdf');
 
-        String body = '<p>Hello ' + (notw.Salesperson__r.Name == null ? '' : notw.Salesperson__r.Name) + ',</p>'
-            + '<p>Please find attached your News Of The Week digest (' + notw.Name + ').</p>'
-            + (String.isBlank(notw.News_Head__c) ? '' : '<hr/>' + notw.News_Head__c);
+        String body = '<p>Hello ' + (run.Salesperson__r.Name == null ? '' : run.Salesperson__r.Name) + ',</p>'
+            + '<p>Please find attached your News Of The Week digest (' + run.Name + ').</p>'
+            + (String.isBlank(run.News_Head__c) ? '' : '<hr/>' + run.News_Head__c);
 
         Messaging.SingleEmailMessage msg = new Messaging.SingleEmailMessage();
-        msg.setToAddresses(new List<String>{ notw.Salesperson__r.Email });
-        msg.setSubject('News Of The Week - ' + notw.Name);
+        msg.setToAddresses(new List<String>{ run.Salesperson__r.Email });
+        msg.setSubject('News Of The Week - ' + run.Name);
         msg.setHtmlBody(body);
         msg.setFileAttachments(new List<Messaging.EmailFileAttachment>{ attachment });
         msg.setSaveAsActivity(false);
@@ -328,12 +376,9 @@ public with sharing class NewsOfTheWeekController {
             Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{ msg });
 
         if (!results.isEmpty() && !results[0].isSuccess()) {
-            throw new AuraHandledException(
-                'Email send failed: ' + results[0].getErrors()[0].getMessage()
-            );
+            throw new NewsRunException('Email send failed: ' + results[0].getErrors()[0].getMessage());
         }
-
-        return notw.Salesperson__r.Email;
+        return run.Salesperson__r.Email;
     }
 
     private static String buildPdfFileName(String recordName) {

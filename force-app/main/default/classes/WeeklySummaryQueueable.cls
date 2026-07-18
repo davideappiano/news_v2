@@ -95,6 +95,12 @@ public with sharing class WeeklySummaryQueueable implements Queueable, Database.
             if (!children.isEmpty()) {
                 update children;
             }
+
+            // Auto-generate the PDF for the freshly archived run. Runs in its own
+            // transaction because getContentAsPDF() can't follow the DML above.
+            if (!Test.isRunningTest()) {
+                System.enqueueJob(new GeneratePdfQueueable(run.Id));
+            }
         } catch (Exception e) {
             try {
                 NewsOfTheWeek__c log = new NewsOfTheWeek__c(

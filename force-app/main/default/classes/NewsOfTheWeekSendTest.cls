@@ -31,16 +31,46 @@ private class NewsOfTheWeekSendTest {
     }
 
     @isTest
-    static void sendToRep_emailsLatestPdfToSalesperson() {
+    static void sendToRep_validatesAndReturnsEmail() {
         User u = createSalesperson('str1', 'rep1@example.com');
         NewsRun__c run = newRun(u, '<h2>Weekly Brief</h2><p>Signals this week.</p>');
         attachPdf(run.Id, 'News Run - 2026');
 
         Test.startTest();
+        // Enqueues SendToRepQueueable (skipped in test) after synchronous validation.
         String email = NewsOfTheWeekController.sendToRep(run.Id);
         Test.stopTest();
 
         System.assertEquals('rep1@example.com', email, 'Returns the recipient email');
+    }
+
+    @isTest
+    static void deliverToRep_sendsAndReturnsEmail() {
+        User u = createSalesperson('dlv', 'dlv@example.com');
+        NewsRun__c run = newRun(u, '<h2>Weekly Brief</h2><p>Signals.</p>');
+        attachPdf(run.Id, 'News Run');
+
+        Test.startTest();
+        String email = NewsOfTheWeekController.deliverToRep(run.Id);
+        Test.stopTest();
+
+        System.assertEquals('dlv@example.com', email, 'deliverToRep returns the recipient email');
+    }
+
+    @isTest
+    static void sendToRepQueueable_runsWithoutError() {
+        User u = createSalesperson('q', 'q@example.com');
+        NewsRun__c run = newRun(u, '<p>brief</p>');
+        attachPdf(run.Id, 'News Run');
+
+        Test.startTest();
+        new SendToRepQueueable(run.Id).execute(null); // must not throw
+        Test.stopTest();
+
+        NewsOfTheWeek__c cfg = [
+            SELECT Error_Log__c FROM NewsOfTheWeek__c WHERE Id = :run.News_Of_The_Week__c
+        ];
+        System.assert(String.isBlank(cfg.Error_Log__c), 'No error logged on a successful send');
     }
 
     @isTest

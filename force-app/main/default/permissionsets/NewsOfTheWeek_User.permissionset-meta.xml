@@ -19,6 +19,14 @@
         <apexClass>NewsOfTheWeekScheduler</apexClass>
         <enabled>true</enabled>
     </classAccesses>
+    <classAccesses>
+        <apexClass>GeneratePdfQueueable</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>SendToRepQueueable</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
     <objectPermissions>
         <object>NewsOfTheWeek__c</object>
         <allowCreate>true</allowCreate>
