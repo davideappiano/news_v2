@@ -18,6 +18,11 @@ public with sharing class GeneratePdfQueueable implements Queueable, Database.Al
     public void execute(QueueableContext ctx) {
         try {
             NewsOfTheWeekController.generatePdfForRun(newsRunId);
+
+            // PDF is now attached — chain the email send (its own transaction).
+            if (!Test.isRunningTest()) {
+                System.enqueueJob(new SendToRepQueueable(newsRunId));
+            }
         } catch (Exception e) {
             // Best-effort: log to the run's config error log, never rethrow —
             // a PDF failure shouldn't disturb the already-complete run.
