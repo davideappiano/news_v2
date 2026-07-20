@@ -6,29 +6,16 @@
  * cadence via Frequency_Days__c and Next_Run_Date__c. This supports any interval
  * (weekly, biweekly, monthly, …) with one scheduled job.
  *
- * Schedule it once (Setup can't do daily easily, so run this in anonymous Apex):
- *
- *   // 6:05 AM every day
- *   System.schedule('News Of The Week - Daily', '0 5 6 * * ?', new NewsOfTheWeekScheduler());
- *
- * or call the helper:
- *
- *   NewsOfTheWeekScheduler.scheduleDaily();
+ * Register it via Setup → Apex Classes → Schedule Apex, or the repeatable
+ * script scripts/apex/scheduleNewsOfTheWeek.apex (System.schedule with a
+ * daily cron). Deploying this class does not schedule it — that's a one-time
+ * per-org action.
  */
 public with sharing class NewsOfTheWeekScheduler implements Schedulable {
 
     /** Default cadence when Frequency_Days__c is blank or invalid. */
     @TestVisible
     private static final Integer DEFAULT_FREQUENCY_DAYS = 7;
-
-    /** Convenience: schedule this job to run daily at 06:05. Returns the CronTrigger Id. */
-    public static Id scheduleDaily() {
-        return System.schedule(
-            'News Of The Week - Daily',
-            '0 5 6 * * ?',
-            new NewsOfTheWeekScheduler()
-        );
-    }
 
     public void execute(SchedulableContext sc) {
         runDue();

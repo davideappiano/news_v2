@@ -49,13 +49,14 @@ private class NewsOfTheWeekSchedulerTest {
     }
 
     @isTest
-    static void scheduleDaily_registersCronJob() {
+    static void scheduler_isSchedulable() {
+        // Confirms the class can be registered as a scheduled job (same as the
+        // Setup UI / scripts/apex/scheduleNewsOfTheWeek.apex does).
         Test.startTest();
-        Id jobId = NewsOfTheWeekScheduler.scheduleDaily();
+        Id jobId = System.schedule('NOTW Test', '0 5 6 * * ?', new NewsOfTheWeekScheduler());
         Test.stopTest();
 
-        System.assertNotEquals(null, jobId, 'A scheduled job id is returned');
-        CronTrigger ct = [SELECT Id, CronExpression FROM CronTrigger WHERE Id = :jobId];
-        System.assertEquals('0 5 6 * * ?', ct.CronExpression, 'Daily 6:05 cron registered');
+        CronTrigger ct = [SELECT CronExpression FROM CronTrigger WHERE Id = :jobId];
+        System.assertEquals('0 5 6 * * ?', ct.CronExpression);
     }
 }
