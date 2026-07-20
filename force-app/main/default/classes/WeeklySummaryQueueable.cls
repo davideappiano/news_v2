@@ -12,7 +12,7 @@ public with sharing class WeeklySummaryQueueable implements Queueable, Database.
     public void execute(QueueableContext ctx) {
         NewsOfTheWeek__c parent = [
             SELECT Id, Salesperson__c, Run_Date__c, Status__c, Error_Log__c,
-                   Total_Accounts__c, Processed_Accounts__c
+                   Total_Accounts__c, Processed_Accounts__c, Notify_Rep_By_Email__c
             FROM NewsOfTheWeek__c
             WHERE Id = :newsOfTheWeekId
             LIMIT 1
@@ -100,7 +100,7 @@ public with sharing class WeeklySummaryQueueable implements Queueable, Database.
             // above rules out getContentAsPDF here): generate the PDF, then email
             // it to the rep.
             if (!Test.isRunningTest()) {
-                System.enqueueJob(new NewsRunDeliveryQueueable(run.Id, true));
+                System.enqueueJob(new NewsRunDeliveryQueueable(run.Id, true, parent.Notify_Rep_By_Email__c));
             }
         } catch (Exception e) {
             try {

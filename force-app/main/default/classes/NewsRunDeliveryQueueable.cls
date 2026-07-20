@@ -16,27 +16,33 @@ public with sharing class NewsRunDeliveryQueueable implements Queueable, Databas
 
     private final Id newsRunId;
     private final Boolean generatePdf;
+    private final Boolean notifyRep;
 
-    public NewsRunDeliveryQueueable(Id newsRunId, Boolean generatePdf) {
+    public NewsRunDeliveryQueueable(Id newsRunId, Boolean generatePdf, Boolean notifyRep) {
         this.newsRunId = newsRunId;
         this.generatePdf = generatePdf;
+        this.notifyRep = notifyRep == true;
     }
 
     public void execute(QueueableContext ctx) {
+        // Generate the PDF first. On failure we stop here, so reaching the send
+        // below guarantees the PDF exists (there's an attachment to send).
         if (generatePdf) {
             try {
                 NewsOfTheWeekController.generatePdfForRun(newsRunId);
             } catch (Exception e) {
-                // No PDF → nothing to send. Log and stop.
                 logError('Auto PDF failed: ' + e.getMessage());
                 return;
             }
         }
 
-        try {
-            NewsOfTheWeekController.deliverToRep(newsRunId);
-        } catch (Exception e) {
-            logError('Send to rep failed: ' + e.getMessage());
+        // Only email the rep when the config opted in (flag captured at enqueue time).
+        if (notifyRep) {
+            try {
+                NewsOfTheWeekController.deliverToRep(newsRunId);
+            } catch (Exception e) {
+                logError('Send to rep failed: ' + e.getMessage());
+            }
         }
     }
 

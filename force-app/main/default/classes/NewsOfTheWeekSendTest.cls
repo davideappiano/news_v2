@@ -31,17 +31,30 @@ private class NewsOfTheWeekSendTest {
     }
 
     @isTest
-    static void sendToRep_validatesAndReturnsEmail() {
+    static void sendToRep_sendsSynchronouslyAndReturnsEmail() {
         User u = createSalesperson('str1', 'rep1@example.com');
         NewsRun__c run = newRun(u, '<h2>Weekly Brief</h2><p>Signals this week.</p>');
         attachPdf(run.Id, 'News Run - 2026');
 
         Test.startTest();
-        // Enqueues NewsRunDeliveryQueueable (skipped in test) after synchronous validation.
         String email = NewsOfTheWeekController.sendToRep(run.Id);
         Test.stopTest();
 
-        System.assertEquals('rep1@example.com', email, 'Returns the recipient email');
+        System.assertEquals('rep1@example.com', email, 'Returns the recipient email after a synchronous send');
+    }
+
+    @isTest
+    static void sendToRep_throwsWhenNoPdf() {
+        User u = createSalesperson('str2', 'rep2@example.com');
+        NewsRun__c run = newRun(u, '<p>brief</p>'); // no PDF attached
+
+        Boolean threw = false;
+        try {
+            NewsOfTheWeekController.sendToRep(run.Id);
+        } catch (AuraHandledException e) {
+            threw = true;
+        }
+        System.assert(threw, 'sendToRep surfaces the no-PDF error synchronously');
     }
 
     @isTest
@@ -58,47 +71,48 @@ private class NewsOfTheWeekSendTest {
     }
 
     @isTest
-    static void deliveryQueueable_sendOnly_runsWithoutError() {
-        User u = createSalesperson('q', 'q@example.com');
-        NewsRun__c run = newRun(u, '<p>brief</p>');
-        attachPdf(run.Id, 'News Run');
-
-        Test.startTest();
-        new NewsRunDeliveryQueueable(run.Id, false).execute(null); // send only; must not throw
-        Test.stopTest();
-
-        NewsOfTheWeek__c cfg = [
-            SELECT Error_Log__c FROM NewsOfTheWeek__c WHERE Id = :run.News_Of_The_Week__c
-        ];
-        System.assert(String.isBlank(cfg.Error_Log__c), 'No error logged on a successful send');
-    }
-
-    @isTest
-    static void deliveryQueueable_generatesPdfAndSends() {
+    static void deliveryQueueable_generatesPdfAndNotifiesWhenFlagOn() {
         User u = createSalesperson('qp', 'qp@example.com');
         NewsRun__c run = newRun(u, '<h2>Brief</h2><p>Signals.</p>');
 
         Test.startTest();
-        new NewsRunDeliveryQueueable(run.Id, true).execute(null);
+        new NewsRunDeliveryQueueable(run.Id, true, true).execute(null); // notify ON
         Test.stopTest();
 
         System.assertEquals(1,
             [SELECT COUNT() FROM ContentDocumentLink WHERE LinkedEntityId = :run.Id],
             'PDF generated and attached');
+        NewsOfTheWeek__c cfg = [SELECT Error_Log__c FROM NewsOfTheWeek__c WHERE Id = :run.News_Of_The_Week__c];
+        System.assert(String.isBlank(cfg.Error_Log__c), 'Send succeeded, nothing logged');
     }
 
     @isTest
-    static void sendToRep_throwsWhenNoPdf() {
+    static void deliveryQueueable_skipsSendWhenFlagOff() {
+        User u = createSalesperson('qo', 'qo@example.com');
+        NewsRun__c run = newRun(u, '<h2>Brief</h2><p>Signals.</p>');
+
+        Test.startTest();
+        new NewsRunDeliveryQueueable(run.Id, true, false).execute(null); // notify OFF
+        Test.stopTest();
+
+        // PDF still generated, but no email attempted (flag off).
+        System.assertEquals(1,
+            [SELECT COUNT() FROM ContentDocumentLink WHERE LinkedEntityId = :run.Id],
+            'PDF generated even when notify is off');
+    }
+
+    @isTest
+    static void deliverToRep_throwsWhenNoPdf() {
         User u = createSalesperson('str2', 'rep2@example.com');
-        NewsRun__c run = newRun(u, '<p>brief</p>');
+        NewsRun__c run = newRun(u, '<p>brief</p>'); // no PDF attached
 
         Boolean threw = false;
         try {
-            NewsOfTheWeekController.sendToRep(run.Id);
-        } catch (AuraHandledException e) {
+            NewsOfTheWeekController.deliverToRep(run.Id);
+        } catch (Exception e) {
             threw = true;
         }
-        System.assert(threw, 'Should reject when no PDF is attached');
+        System.assert(threw, 'deliverToRep should reject when no PDF is attached');
     }
 
     private static NewsRun__c newRun(User u, String newsHead) {

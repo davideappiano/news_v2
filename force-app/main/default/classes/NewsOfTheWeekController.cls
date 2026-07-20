@@ -230,38 +230,21 @@ public with sharing class NewsOfTheWeekController {
     }
 
     /**
-     * Email the most recent PDF attached to this record to the assigned
-     * salesperson's email address. Requires that a PDF was already generated
-     * (via the Generate PDF action). Returns the recipient email for the toast.
+     * Email the run's PDF to the salesperson synchronously and return the
+     * recipient address for the toast. Runs in the user's context, so the org's
+     * Deliverability must be "All email" for the send to succeed; failures
+     * surface immediately as an AuraHandledException.
      */
     @AuraEnabled
     public static String sendToRep(Id recordId) {
         if (recordId == null) {
             throw new AuraHandledException('A News Run record id is required.');
         }
-
-        // Validate synchronously so the user gets an immediate toast, then hand
-        // the actual send to a Queueable. Async Apex runs in a system context,
-        // which lets the email through even when interactive single-email sends
-        // are restricted by org deliverability ("System email only").
-        NewsRun__c run = [
-            SELECT Salesperson__c, Salesperson__r.Email
-            FROM NewsRun__c
-            WHERE Id = :recordId
-            LIMIT 1
-        ];
-        if (run.Salesperson__c == null || String.isBlank(run.Salesperson__r.Email)) {
-            throw new AuraHandledException('The salesperson has no email address on file.');
+        try {
+            return deliverToRep(recordId);
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
         }
-        if (latestPdfId(recordId) == null) {
-            throw new AuraHandledException('No PDF is attached to this record. Generate the PDF first.');
-        }
-
-        if (!Test.isRunningTest()) {
-            // Send only (PDF already exists) — don't regenerate.
-            System.enqueueJob(new NewsRunDeliveryQueueable(recordId, false));
-        }
-        return run.Salesperson__r.Email;
     }
 
     /** Returns the latest PDF ContentVersion linked to the record, or null. */
@@ -287,11 +270,6 @@ public with sharing class NewsOfTheWeekController {
             LIMIT 1
         ];
         return pdfs.isEmpty() ? null : pdfs[0];
-    }
-
-    private static Id latestPdfId(Id recordId) {
-        ContentVersion cv = latestPdf(recordId);
-        return cv == null ? null : cv.Id;
     }
 
     /**

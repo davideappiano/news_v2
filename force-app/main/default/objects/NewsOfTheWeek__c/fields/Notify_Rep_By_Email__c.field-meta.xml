@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Notify_Rep_By_Email__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>When checked, the automatic pipeline emails the generated PDF to the salesperson after a run completes. When unchecked, the PDF is still generated but no email is sent. The manual Send to Rep action ignores this flag.</description>
+    <externalId>false</externalId>
+    <label>Notify Rep By Email</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>
