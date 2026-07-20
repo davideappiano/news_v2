@@ -108,48 +108,6 @@ public with sharing class NewsOfTheWeekController {
     }
 
     /**
-     * Wipe a NewsOfTheWeek__c run back to a clean Draft state.
-     */
-    @AuraEnabled
-    public static Integer reset(Id recordId) {
-        if (recordId == null) {
-            throw new AuraHandledException('A NewsOfTheWeek record id is required.');
-        }
-
-        NewsOfTheWeek__c notw = [
-            SELECT Id, Status__c
-            FROM NewsOfTheWeek__c
-            WHERE Id = :recordId
-            LIMIT 1
-        ];
-
-        if (notw.Status__c == 'Processing') {
-            throw new AuraHandledException(
-                'Cannot reset while a run is Processing. Wait for it to finish or fail first.'
-            );
-        }
-
-        List<AccountNews__c> children = [
-            SELECT Id FROM AccountNews__c WHERE News_Of_The_Week__c = :recordId
-        ];
-        Integer deleted = children.size();
-        if (deleted > 0) {
-            delete children;
-        }
-
-        notw.News_Head__c = null;
-        notw.Error_Log__c = null;
-        notw.Run_Date__c = null;
-        notw.Status__c = 'Draft';
-        notw.Total_Accounts__c = null;
-        notw.Processed_Accounts__c = null;
-        notw.Active_Streams__c = null;
-        update notw;
-
-        return deleted;
-    }
-
-    /**
      * Re-run ONLY the summary step over the AccountNews__c children that already
      * exist — does not re-research the accounts. Useful after tweaking the
      * Weekly_News_Summary_PT template or clearing a bad summary.
