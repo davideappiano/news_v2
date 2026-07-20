@@ -37,7 +37,7 @@ private class NewsOfTheWeekSendTest {
         attachPdf(run.Id, 'News Run - 2026');
 
         Test.startTest();
-        // Enqueues SendToRepQueueable (skipped in test) after synchronous validation.
+        // Enqueues NewsRunDeliveryQueueable (skipped in test) after synchronous validation.
         String email = NewsOfTheWeekController.sendToRep(run.Id);
         Test.stopTest();
 
@@ -58,19 +58,33 @@ private class NewsOfTheWeekSendTest {
     }
 
     @isTest
-    static void sendToRepQueueable_runsWithoutError() {
+    static void deliveryQueueable_sendOnly_runsWithoutError() {
         User u = createSalesperson('q', 'q@example.com');
         NewsRun__c run = newRun(u, '<p>brief</p>');
         attachPdf(run.Id, 'News Run');
 
         Test.startTest();
-        new SendToRepQueueable(run.Id).execute(null); // must not throw
+        new NewsRunDeliveryQueueable(run.Id, false).execute(null); // send only; must not throw
         Test.stopTest();
 
         NewsOfTheWeek__c cfg = [
             SELECT Error_Log__c FROM NewsOfTheWeek__c WHERE Id = :run.News_Of_The_Week__c
         ];
         System.assert(String.isBlank(cfg.Error_Log__c), 'No error logged on a successful send');
+    }
+
+    @isTest
+    static void deliveryQueueable_generatesPdfAndSends() {
+        User u = createSalesperson('qp', 'qp@example.com');
+        NewsRun__c run = newRun(u, '<h2>Brief</h2><p>Signals.</p>');
+
+        Test.startTest();
+        new NewsRunDeliveryQueueable(run.Id, true).execute(null);
+        Test.stopTest();
+
+        System.assertEquals(1,
+            [SELECT COUNT() FROM ContentDocumentLink WHERE LinkedEntityId = :run.Id],
+            'PDF generated and attached');
     }
 
     @isTest

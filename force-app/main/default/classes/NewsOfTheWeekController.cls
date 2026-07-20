@@ -167,7 +167,7 @@ public with sharing class NewsOfTheWeekController {
 
     /**
      * Render a NewsRun__c's News_Head__c to PDF and attach it to the run.
-     * Reusable from both the LWC action and GeneratePdfQueueable (auto-generate
+     * Reusable from both the LWC action and NewsRunDeliveryQueueable (auto-generate
      * after a run completes). Throws plain exceptions; callers translate.
      *
      * Note: getContentAsPDF() behaves like a callout and cannot run after DML in
@@ -258,7 +258,8 @@ public with sharing class NewsOfTheWeekController {
         }
 
         if (!Test.isRunningTest()) {
-            System.enqueueJob(new SendToRepQueueable(recordId));
+            // Send only (PDF already exists) — don't regenerate.
+            System.enqueueJob(new NewsRunDeliveryQueueable(recordId, false));
         }
         return run.Salesperson__r.Email;
     }
@@ -294,7 +295,7 @@ public with sharing class NewsOfTheWeekController {
     }
 
     /**
-     * Actual email dispatch — invoked from SendToRepQueueable so it runs in a
+     * Actual email dispatch — invoked from NewsRunDeliveryQueueable so it runs in a
      * system/async context. Returns the recipient email; throws plain exceptions.
      */
     public static String deliverToRep(Id recordId) {

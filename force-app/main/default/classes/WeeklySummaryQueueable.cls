@@ -96,10 +96,11 @@ public with sharing class WeeklySummaryQueueable implements Queueable, Database.
                 update children;
             }
 
-            // Auto-generate the PDF for the freshly archived run. Runs in its own
-            // transaction because getContentAsPDF() can't follow the DML above.
+            // Finalize the freshly archived run in its own transaction (the DML
+            // above rules out getContentAsPDF here): generate the PDF, then email
+            // it to the rep.
             if (!Test.isRunningTest()) {
-                System.enqueueJob(new GeneratePdfQueueable(run.Id));
+                System.enqueueJob(new NewsRunDeliveryQueueable(run.Id, true));
             }
         } catch (Exception e) {
             try {
